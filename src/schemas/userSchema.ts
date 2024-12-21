@@ -15,7 +15,7 @@ export const signup = Yup.object({
     username: Yup.string().required(),
     email: Yup.string().email().required(),
     phoneNumber: Yup.string().required(),
-    age: Yup.number(),
+    age: Yup.number().min(16).max(100),
     gender: Yup.string(),
     password: Yup.string().required()
 })
@@ -27,7 +27,7 @@ export const updateUser = Yup.object({
     username: Yup.string(),
     email: Yup.string().email(),
     phoneNumber: Yup.string(),
-    age: Yup.number(),
+    age: Yup.number().min(16).max(100),
     gender: Yup.string(),
     password: Yup.string()
 })

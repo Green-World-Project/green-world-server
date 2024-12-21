@@ -1,9 +1,16 @@
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 
-// type Gender = {
-//     Male: 'male',
-//     Female: 'female'
-// }
+export interface User {
+    _id: Types.ObjectId;
+    firstName: String;
+    lastName: String;
+    username: String;
+    email: String;
+    phoneNumber: String;
+    age: Number;
+    gender: String;
+    password: String;
+}
 
 const userSchema = new mongoose.Schema({
     firstName: { type: String, required: true },
@@ -11,7 +18,7 @@ const userSchema = new mongoose.Schema({
     username: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
     phoneNumber: { type: String, required: true, unique: true },
-    age: { type: Number, default: null },
+    age: { type: Number, default: null, min: 16, max: 100 },
     gender: { type: String, default: null },
     password: { type: String, required: true }
 });

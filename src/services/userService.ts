@@ -1,4 +1,5 @@
 import User from '../models/user';
+import { mapUserList } from '../utils/user'
 import { AES } from '../lib/AES';
 
 const secretKey = "my-strong-secret-key"; // A user-defined secret key
@@ -8,16 +9,16 @@ export const getUserService = async (params: any, body: any) => {
     const user = await User.find({
         username: params.username,
         _id: body._id
-    }, { __v: false });
-    return user;
+    });
+    return mapUserList(user);
 }
 
 export const loginService = async (body: any) => {
     const user = await User.find({
         email: body.email
         // password: body.password
-    }, { __v: false });
-    return user;
+    });
+    return mapUserList(user);
 }
 
 export const signupService = async (body: any) => {
