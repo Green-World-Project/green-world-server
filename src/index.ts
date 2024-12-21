@@ -12,7 +12,6 @@ app.use(express.json());
 
 mongoose.connect(`mongodb+srv://poulakarem:I9Mo2yABmg3zpgqO@green-world-db.4znn6.mongodb.net/database`);
 
-
 // mongoose.connect(`mongodb+srv://poulakarem:I9Mo2yABmg3zpgqO@green-world-db.4znn6.mongodb.net`);
 
 // const db = mongoose.connection;
