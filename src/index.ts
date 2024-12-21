@@ -10,7 +10,10 @@ app.use(express.json());
 
 // mongoose.connect(`mongodb://localhost:27017/greenWorld`);
 
-mongoose.connect(`mongodb+srv://poulakarem:I9Mo2yABmg3zpgqO@green-world-db.4znn6.mongodb.net`);
+mongoose.connect(`mongodb+srv://poulakarem:I9Mo2yABmg3zpgqO@green-world-db.4znn6.mongodb.net/`);
+
+
+// mongoose.connect(`mongodb+srv://poulakarem:I9Mo2yABmg3zpgqO@green-world-db.4znn6.mongodb.net`);
 
 const db = mongoose.connection;
 
