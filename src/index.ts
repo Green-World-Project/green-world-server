@@ -1,6 +1,7 @@
 import express from 'express';
 import mongoose from "mongoose";
 import userRoutes from "./routes/userRoutes";
+import vercelRoutes from "./routes/vercelRoutes";
 
 const app = express();
 const port = 3000;
@@ -14,6 +15,7 @@ const db = mongoose.connection;
 db.on("error", () => console.log("Connection Error!"));
 db.once("open", () => console.log("Connected to mongoDB..."));
 
+app.use(vercelRoutes)
 app.use(userRoutes);
 
 app.listen(port, () => console.log(`Server is running on port ${port}...`));
