@@ -33,22 +33,22 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateUser = exports.createUser = exports.loginUser = exports.getUser = void 0;
+exports.updateUser = exports.signup = exports.login = exports.getUser = void 0;
 const Yup = __importStar(require("yup"));
 exports.getUser = Yup.object({
-    _id: Yup.string().required(),
+// _id: Yup.string().required()
 });
-exports.loginUser = Yup.object({
+exports.login = Yup.object({
     email: Yup.string().email().required(),
-    password: Yup.string().required()
+    // password: Yup.string().required()
 });
-exports.createUser = Yup.object({
+exports.signup = Yup.object({
     firstName: Yup.string().required(),
     lastName: Yup.string().required(),
     username: Yup.string().required(),
     email: Yup.string().email().required(),
     phoneNumber: Yup.string().required(),
-    age: Yup.number(),
+    age: Yup.number().min(16).max(100),
     gender: Yup.string(),
     password: Yup.string().required()
 });
@@ -59,7 +59,7 @@ exports.updateUser = Yup.object({
     username: Yup.string(),
     email: Yup.string().email(),
     phoneNumber: Yup.string(),
-    age: Yup.number(),
+    age: Yup.number().min(16).max(100),
     gender: Yup.string(),
     password: Yup.string()
 });

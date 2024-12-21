@@ -4,15 +4,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
-const plantInfoSchema = new mongoose_1.default.Schema({
-    name: { String, required: true },
-    info: { String, required: true }
-});
 const picturesSchema = new mongoose_1.default.Schema({
     pictures: [
         {
             fileName: { type: String, required: true },
-            plantInfo: plantInfoSchema
+            info: {
+                name: { String, required: true },
+                condition: { String, required: true }
+            }
         }
     ]
 });

@@ -12,29 +12,38 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateUser = exports.createUser = exports.loginUser = exports.gerUser = void 0;
+exports.updateUserService = exports.signupService = exports.loginService = exports.getUserService = void 0;
 const user_1 = __importDefault(require("../models/user"));
+const user_2 = require("../utils/user");
 const AES_1 = require("../lib/AES");
 const secretKey = "my-strong-secret-key"; // A user-defined secret key
 const aes = new AES_1.AES(secretKey);
-const gerUser = (params, id) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = yield user_1.default.find({ username: params.username, _id: id }, { __v: false });
-    return user;
+const getUserService = (params, body) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield user_1.default.find({
+        username: params.username,
+        _id: body._id
+    });
+    return (0, user_2.mapUserList)(user);
 });
-exports.gerUser = gerUser;
-const loginUser = (body) => __awaiter(void 0, void 0, void 0, function* () {
-    const { email, password } = body;
-    const user = yield user_1.default.find({ email: email, password: password }, { __v: false });
-    return user;
+exports.getUserService = getUserService;
+const loginService = (body) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield user_1.default.find({
+        email: body.email
+        // password: body.password
+    });
+    return (0, user_2.mapUserList)(user);
 });
-exports.loginUser = loginUser;
-const createUser = (body) => __awaiter(void 0, void 0, void 0, function* () {
+exports.loginService = loginService;
+const signupService = (body) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield user_1.default.create(body);
     return user;
 });
-exports.createUser = createUser;
-const updateUser = (params, body) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = yield user_1.default.updateOne({ username: params.username, _id: body._id }, { $set: body });
+exports.signupService = signupService;
+const updateUserService = (params, body) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield user_1.default.updateOne({
+        username: params.username,
+        _id: body._id
+    }, { $set: body });
     return user;
 });
-exports.updateUser = updateUser;
+exports.updateUserService = updateUserService;
