@@ -33,26 +33,8 @@ let isConnected: boolean = false;
 /**
  * Connect to MongoDB.
  */
-const connectMongo = async (): Promise<void> => {
-    if (isConnected) {
-        console.log("MongoDB is already connected");
-        return;
-    }
 
-    try {
-        const db = await mongoose.connect(process.env.MONGODB_URI || "", {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        } as ConnectOptions);
-
-        isConnected = db.connections[0].readyState === 1; // 1 means connected
-        console.log("MongoDB connected successfully");
-    } catch (error) {
-        console.error("Error connecting to MongoDB:", error);
-        throw new Error("Failed to connect to MongoDB");
-    }
-};
-
+mongoose.connect(process.env.MONGODB_URI || '');
 
 app.use(vercelRoutes)
 app.use(userRoutes);
