@@ -3,7 +3,6 @@ import { MongoClient, ServerApiVersion } from 'mongodb';
 import mongoose, { ConnectOptions } from "mongoose";
 import userRoutes from "./routes/userRoutes";
 import vercelRoutes from "./routes/vercelRoutes";
-import type { NextApiRequest, NextApiResponse } from "next";
 
 
 const app = express();
