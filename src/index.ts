@@ -1,8 +1,10 @@
 import express from 'express';
 import { MongoClient, ServerApiVersion } from 'mongodb';
-import mongoose from "mongoose";
+import mongoose, { ConnectOptions } from "mongoose";
 import userRoutes from "./routes/userRoutes";
 import vercelRoutes from "./routes/vercelRoutes";
+import type { NextApiRequest, NextApiResponse } from "next";
+
 
 const app = express();
 const port = 3000;
@@ -23,31 +25,34 @@ app.use(express.json());
 
 
 
-const uri = "mongodb+srv://poulakarem:I9Mo2yABmg3zpgqO@green-world-db.4znn6.mongodb.net/?retryWrites=true&w=majority&appName=green-world-db";
+// const uri = "mongodb+srv://poulakarem:I9Mo2yABmg3zpgqO@green-world-db.4znn6.mongodb.net/?retryWrites=true&w=majority&appName=green-world-db";
 
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
-const client = new MongoClient(uri, {
-    serverApi: {
-        version: ServerApiVersion.v1,
-        strict: true,
-        deprecationErrors: true,
+
+// Track the connection status globally to reuse connections
+let isConnected: boolean = false;
+
+/**
+ * Connect to MongoDB.
+ */
+const connectMongo = async (): Promise<void> => {
+    if (isConnected) {
+        console.log("MongoDB is already connected");
+        return;
     }
-});
 
-async function run() {
     try {
-        // Connect the client to the server	(optional starting in v4.7)
-        await client.connect();
-        // Send a ping to confirm a successful connection
-        await client.db("admin").command({ ping: 1 });
-        console.log("Pinged your deployment. You successfully connected to MongoDB!");
-    } finally {
-        // Ensures that the client will close when you finish/error
-        await client.close();
-    }
-}
-run().catch(console.dir);
+        const db = await mongoose.connect(process.env.MONGODB_URI || "", {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        } as ConnectOptions);
 
+        isConnected = db.connections[0].readyState === 1; // 1 means connected
+        console.log("MongoDB connected successfully");
+    } catch (error) {
+        console.error("Error connecting to MongoDB:", error);
+        throw new Error("Failed to connect to MongoDB");
+    }
+};
 
 
 app.use(vercelRoutes)
