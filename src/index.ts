@@ -1,6 +1,5 @@
 import express from 'express';
-import { MongoClient, ServerApiVersion } from 'mongodb';
-import mongoose, { ConnectOptions } from "mongoose";
+import mongoose from "mongoose";
 import userRoutes from "./routes/userRoutes";
 import vercelRoutes from "./routes/vercelRoutes";
 
