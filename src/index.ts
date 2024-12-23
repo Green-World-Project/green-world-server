@@ -7,9 +7,7 @@ const port = 3000;
 
 app.use(express.json());
 
-// mongoose.connect(`mongodb+srv://vercel-admin-user-676834cadc6de46ef028bac1:kfzmCWFGbyb0tZRQ@cluster0.bdm0t.mongodb.net/greenWorldDatabase`);
-
-mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://vercel-admin-user-676834cadc6de46ef028bac1:kfzmCWFGbyb0tZRQ@cluster0.bdm0t.mongodb.net/greenWorldDatabase');
+mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://vercel-admin-user-676834cadc6de46ef028bac1:kfzmCWFGbyb0tZRQ@cluster0.bdm0t.mongodb.net/greenWorldDatabase?retryWrites=true&w=majority');
 
 app.use(userRoutes);
 
