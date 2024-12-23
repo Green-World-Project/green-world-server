@@ -5,7 +5,6 @@
     "mongoose": "^8.8.3",
     "node": "^23.5.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.7.2",
     "yup": "^1.6.0"
   },
   "engines": {
@@ -16,9 +15,9 @@
   "main": "dist/index.js",
   "type": "commonJS",
   "scripts": {
-    "start": "ts-node src/index.ts",
-    "build": "tsc",
-    "dev": "nodemon --watch src --exec ts-node src/index.ts",
+    "start": "node dist/index.js",
+    "build": "tsc --outDir dist",
+    "dev": "ts-node-dev --respawn src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Poula",
@@ -26,6 +25,8 @@
   "description": "",
   "devDependencies": {
     "@types/express": "^5.0.0",
-    "@vercel/node": "^4.0.0"
+    "@types/node": "^22.10.2",
+    "@vercel/node": "^4.0.0",
+    "typescript": "^5.7.2"
   }
 }
