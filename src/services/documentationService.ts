@@ -1,6 +1,6 @@
 import path from 'path';
 
 export const documentationService = () => {
-    const documentation = path.join(`${__dirname}/../../`, 'Green World API Documentation.html');
+    const documentation = path.join(`${__dirname}/../../view`, 'documentation.html');
     return documentation;
 }
