@@ -9,6 +9,10 @@ const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
 const app = (0, express_1.default)();
 const port = 3000;
 app.use(express_1.default.json());
-mongoose_1.default.connect(process.env.MONGODB_URI || 'mongodb+srv://vercel-admin-user-676834cadc6de46ef028bac1:kfzmCWFGbyb0tZRQ@cluster0.bdm0t.mongodb.net/greenWorldDatabase?retryWrites=true&w=majority');
+// mongoose.connect('mongodb+srv://vercel-admin-user-676834cadc6de46ef028bac1:kfzmCWFGbyb0tZRQ@cluster0.bdm0t.mongodb.net/greenWorldDatabase?retryWrites=true&w=majority');
+mongoose_1.default.connect(process.env.MONGODB_URI || '');
 app.use(userRoutes_1.default);
+app.get('/vercel', (req, res) => {
+    res.json({ message: "Server is running on port" });
+});
 app.listen(port, () => console.log(`Server is running on port ${port}...`));

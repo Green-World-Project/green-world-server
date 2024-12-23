@@ -13,8 +13,8 @@ mongoose.connect(process.env.MONGODB_URI || '');
 
 app.use(userRoutes);
 
-app.get('/', (req: Request, res: Response) => {
-    res.send('Server is running on port')
+app.get('/vercel', (req: Request, res: Response) => {
+    res.json({ message: "Server is running on port" })
 })
 
 app.listen(port, () => console.log(`Server is running on port ${port}...`));
