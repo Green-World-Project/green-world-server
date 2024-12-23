@@ -11,10 +11,10 @@
   "engines": {
     "node": "22.x"
   },
-  "name": "Green World API",
+  "name": "green-world-api",
   "version": "1.0.0",
-  "main": "dist/index.js",
-  "type": "commonJS",
+  "main": "src/index.ts",
+  "type": "module",
   "scripts": {
     "start": "ts-node src/index.ts",
     "dev": "nodemon --watch src --exec ts-node src/index.ts",
