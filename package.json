@@ -16,7 +16,6 @@
   "type": "commonJS",
   "scripts": {
     "start": "ts-node src/index.ts",
-    "build": "tsc && next build",
     "dev": "nodemon --watch src --exec ts-node src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
