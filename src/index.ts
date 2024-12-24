@@ -7,9 +7,9 @@ const port = 3000;
 
 app.use(express.json());
 
-// mongoose.connect('mongodb+srv://vercel-admin-user-676834cadc6de46ef028bac1:kfzmCWFGbyb0tZRQ@cluster0.bdm0t.mongodb.net/greenWorldDatabase?retryWrites=true&w=majority');
+const MONGODB_URI = 'mongodb+srv://vercel-admin-user-6769654e3744c17d3ce1a85d:ki8EKOsjeFAz7RvL@cluster0.bdm0t.mongodb.net/greenWorldDatabase?retryWrites=true&w=majority';
 
-mongoose.connect(process.env.MONGODB_URI || '');
+mongoose.connect(process.env.MONGODB_URI || MONGODB_URI);
 
 const db = mongoose.connection;
 
