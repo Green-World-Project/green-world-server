@@ -18,7 +18,8 @@
     "start": "ts-node src/index.ts",
     "build": "tsc",
     "dev": "nodemon --watch src --exec ts-node src/index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "vercel-build": "npm run build"
   },
   "author": "Poula",
   "license": "ISC",
