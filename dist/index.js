@@ -10,7 +10,7 @@ const app = (0, express_1.default)();
 const port = 3000;
 app.use(express_1.default.json());
 // mongoose.connect('mongodb+srv://vercel-admin-user-676834cadc6de46ef028bac1:kfzmCWFGbyb0tZRQ@cluster0.bdm0t.mongodb.net/greenWorldDatabase?retryWrites=true&w=majority');
-mongoose_1.default.connect(process.env.MONGODB_URI || 'mongodb+srv://vercel-admin-user-676834cadc6de46ef028bac1:kfzmCWFGbyb0tZRQ@cluster0.bdm0t.mongodb.net/greenWorldDatabase?retryWrites=true&w=majority');
+mongoose_1.default.connect(process.env.MONGODB_URI || '');
 const db = mongoose_1.default.connection;
 db.on("error", () => console.log("Connection Error!"));
 db.once("open", () => console.log("Connected to mongoDB..."));
