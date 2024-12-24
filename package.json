@@ -22,7 +22,7 @@
   },
   "author": "Poula",
   "license": "ISC",
-  "description": "",
+  "description": "api for green world app",
   "devDependencies": {
     "@types/express": "^5.0.0",
     "@types/node": "^22.10.2",
