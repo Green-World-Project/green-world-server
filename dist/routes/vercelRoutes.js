@@ -6,6 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
 router.get("/vercel", (req, res) => {
-    res.send("vercel is working...");
+    res.send("Server is running on vercel...");
 });
 exports.default = router;
