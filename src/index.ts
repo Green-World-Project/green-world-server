@@ -19,5 +19,7 @@ db.once("open", () => console.log("Connected to mongoDB..."));
 
 app.use(userRoutes);
 app.use(vercelRoutes)
+app.use('/api/vercel', vercelRoutes);
+
 
 app.listen(port, () => console.log(`Server is running on port ${port}...`));
