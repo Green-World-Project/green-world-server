@@ -8,18 +8,16 @@ const port = 3000;
 
 app.use(express.json());
 
-const MONGODB_URI = 'mongodb+srv://vercel-admin-user-676ac99b2c734d5cce212ca9:GYll9SrpyxCVJeNC@cluster0.bdm0t.mongodb.net/greenWorldDatabase?retryWrites=true&w=majority';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://vercel-admin-user-676ac99b2c734d5cce212ca9:GYll9SrpyxCVJeNC@cluster0.bdm0t.mongodb.net/greenWorldDatabase?retryWrites=true&w=majority';
 
-mongoose.connect(process.env.MONGODB_URI || MONGODB_URI);
+mongoose.connect(MONGODB_URI);
 
 const db = mongoose.connection;
 
-db.on("error", () => console.log("Connection Error!"));
+db.on("error", (err) => console.error("Connection Error!", err));
 db.once("open", () => console.log("Connected to mongoDB..."));
 
 app.use(userRoutes);
 app.use(vercelRoutes)
-app.use('/api/vercel', vercelRoutes);
-
 
 app.listen(port, () => console.log(`Server is running on port ${port}...`));
