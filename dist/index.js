@@ -4,18 +4,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const mongoose_1 = __importDefault(require("mongoose"));
+const dotenv_1 = __importDefault(require("dotenv"));
+const mongodb_1 = require("./config/mongodb");
 const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
-const vercelRoutes_1 = __importDefault(require("./routes/vercelRoutes"));
 const app = (0, express_1.default)();
-const port = 3000;
+dotenv_1.default.config();
+const port = process.env.PORT;
 app.use(express_1.default.json());
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://vercel-admin-user-676ac99b2c734d5cce212ca9:GYll9SrpyxCVJeNC@cluster0.bdm0t.mongodb.net/greenWorldDatabase?retryWrites=true&w=majority';
-mongoose_1.default.connect(MONGODB_URI);
-const db = mongoose_1.default.connection;
-db.on("error", (error) => console.error("Connection Error!", error));
-db.once("open", () => console.log("Connected to mongoDB..."));
+(0, mongodb_1.connectToDatabase)();
+app.get('/', (req, res) => {
+    res.json({ message: `Server is running on port ${port}...` });
+});
 app.use(userRoutes_1.default);
-app.use(vercelRoutes_1.default);
 app.listen(port, () => console.log(`Server is running on port ${port}...`));
-exports.default = app;
