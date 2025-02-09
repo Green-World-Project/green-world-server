@@ -1,18 +1,16 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.mapUserList = void 0;
+exports.mapUserList = exports.userObject = void 0;
 const userObject = (user) => ({
-    _id: user._id,
     firstName: user.firstName,
     lastName: user.lastName,
-    username: user.username,
     email: user.email,
     phoneNumber: user.phoneNumber,
     age: user.age,
     gender: user.gender,
-    password: user.password
 });
+exports.userObject = userObject;
 const mapUserList = (userList) => {
-    return userList.map((user) => userObject(user));
+    return userList.map((user) => (0, exports.userObject)(user));
 };
 exports.mapUserList = mapUserList;

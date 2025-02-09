@@ -1,35 +1,71 @@
-import User from '../models/user';
-import { mapUserList } from '../utils/user'
-import { AES } from '../lib/AES';
+import bcrypt from 'bcrypt';
+import UserModel, { User } from '../models/user';
+import { userObject, mapUserList } from '../utils/user'
 
-const secretKey = "my-strong-secret-key"; // A user-defined secret key
-const aes = new AES(secretKey);
+const saltRounds = 10;
 
-export const getUserService = async (params: any, body: any) => {
-    const user = await User.find({
-        username: params.username,
+export const getUserService = async (body: User) => {
+    const user = await UserModel.find({
         _id: body._id
     });
     return mapUserList(user);
 }
 
-export const loginService = async (body: any) => {
-    const user = await User.find({
-        email: body.email
-        // password: body.password
+export const registerService = async (body: User) => {
+    const { email, phoneNumber, password }: any = body;
+    const checkUser = await UserModel.findOne({
+        $or: [
+            { email },
+            { phoneNumber }
+        ]
     });
-    return mapUserList(user);
+
+    if (checkUser) {
+        let existsMessage: User = {};
+        if (email === checkUser.email) existsMessage.email = 'Email already exists';
+        if (phoneNumber === checkUser.phoneNumber) existsMessage.phoneNumber = 'Phone number already exists';
+        return existsMessage;
+    }
+    try {
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+        body.password = hashedPassword;
+        const user = await UserModel.create(body);
+        return { message: 'Added successfully', user };
+    } catch (error) {
+        return { message: 'Error hashing pasword:', error };
+    }
 }
 
-export const signupService = async (body: any) => {
-    const user = await User.create(body);
-    return user;
-}
+export const loginService = async (body: User) => {
+    const { email, password }: any = body;
+    const checkUser = await UserModel.findOne({ email });
+    if (checkUser) {
+        try {
+            const result = await bcrypt.compare(password, checkUser.password);
+            if (result) return userObject(checkUser);
+            else return { message: 'Invalid email or password' };
+        } catch (error) {
+            return { message: `Error comparing passwords:  `, error };
+        }
+    } else return { message: 'Invalid email or password' };
+};
 
-export const updateUserService = async (params: any, body: any) => {
-    const user = await User.updateOne({
-        username: params.username,
-        _id: body._id
+export const updateUserService = async (body: User) => {
+    const { _id, password }: any = body;
+    if (password) {
+        try {
+            const hashedPassword = await bcrypt.hash(password, saltRounds);
+            body.password = hashedPassword;
+            const user = await UserModel.updateOne({
+                _id
+            }, { $set: body });
+            return { message: 'Updated successfully', user };
+        } catch (error) {
+            return { message: 'Error hashing pasword:', error };
+        }
+    }
+    const user = await UserModel.updateOne({
+        _id
     }, { $set: body });
-    return user;
+    return { message: 'Updated successfully', user };
 }

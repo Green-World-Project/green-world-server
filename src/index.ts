@@ -11,10 +11,6 @@ app.use(express.json());
 
 connectToDatabase();
 
-app.get('/', (req: Request, res: Response) => {
-    res.json({ message: `Server is running on port ${port}...` })
-});
-
 app.use(userRoutes);
 
 app.listen(port, () => console.log(`Server is running on port ${port}...`));

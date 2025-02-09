@@ -42,13 +42,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateUser = exports.signup = exports.login = exports.getUser = void 0;
+exports.updateUser = exports.login = exports.signup = exports.getUser = void 0;
 const userService = __importStar(require("../services/userService"));
 const userSchema = __importStar(require("../schemas/userSchema"));
 const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield userSchema.getUser.validate(req.body);
-        const user = yield userService.getUserService(req.params, req.body);
+        const user = yield userService.getUserService(req.body);
         res.status(200).json(user);
     }
     catch (error) {
@@ -57,23 +57,11 @@ const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.getUser = getUser;
-const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        yield userSchema.login.validate(req.body);
-        const user = yield userService.loginService(req.body);
-        res.status(200).json(user);
-    }
-    catch (error) {
-        if (error instanceof Error)
-            res.status(500).json({ error: error.message });
-    }
-});
-exports.login = login;
 const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield userSchema.signup.validate(req.body);
-        const user = yield userService.signupService(req.body);
-        res.status(201).json({ message: `Added successfully`, user });
+        const user = yield userService.registerService(req.body);
+        res.status(201).json(user);
     }
     catch (error) {
         if (error instanceof Error)
@@ -81,12 +69,23 @@ const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.signup = signup;
+const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield userSchema.login.validate(req.body);
+        const user = yield userService.loginService(req.body);
+        res.status(201).json(user);
+    }
+    catch (error) {
+        if (error instanceof Error)
+            res.status(500).json({ error: error.message });
+    }
+});
+exports.login = login;
 const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield userSchema.updateUser.validate(req.body);
-        const user = yield userService.updateUserService(req.params, req.body);
-        req.params.username = "hello";
-        res.status(200).json({ message: `Updated successfully`, user });
+        const user = yield userService.updateUserService(req.body);
+        res.status(200).json(user);
     }
     catch (error) {
         if (error instanceof Error)

@@ -36,16 +36,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateUser = exports.signup = exports.login = exports.getUser = void 0;
 const Yup = __importStar(require("yup"));
 exports.getUser = Yup.object({
-// _id: Yup.string().required()
+    _id: Yup.string().required()
 });
 exports.login = Yup.object({
     email: Yup.string().email().required(),
-    // password: Yup.string().required()
+    password: Yup.string().required()
 });
 exports.signup = Yup.object({
     firstName: Yup.string().required(),
     lastName: Yup.string().required(),
-    username: Yup.string().required(),
     email: Yup.string().email().required(),
     phoneNumber: Yup.string().required(),
     age: Yup.number().min(16).max(100),
@@ -56,7 +55,6 @@ exports.updateUser = Yup.object({
     _id: Yup.string().required(),
     firstName: Yup.string(),
     lastName: Yup.string(),
-    username: Yup.string(),
     email: Yup.string().email(),
     phoneNumber: Yup.string(),
     age: Yup.number().min(16).max(100),
