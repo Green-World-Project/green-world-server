@@ -13,7 +13,7 @@ export const getUser = async (req: Request, res: Response) => {
     }
 }
 
-export const signup = async (req: Request, res: Response) => {
+export const register = async (req: Request, res: Response) => {
     try {
         await userSchema.signup.validate(req.body);
         const user = await userService.registerService(req.body);
