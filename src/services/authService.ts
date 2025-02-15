@@ -6,6 +6,6 @@ export const generateToken = (user: User = {}) => {
     if (!process.env.ACCESS_TOKEN_SECRET) {
         throw new Error("ACCESS_TOKEN_SECRET is not defined");
     }
-    const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "10m" });
+    const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "7d" });
     return { token }
 }
