@@ -20,7 +20,6 @@ export const signup = Yup.object({
 })
 
 export const updateUser = Yup.object({
-    _id: Yup.string().required(),
     firstName: Yup.string(),
     lastName: Yup.string(),
     email: Yup.string().email(),

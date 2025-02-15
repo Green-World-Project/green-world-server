@@ -1,12 +1,14 @@
 import bcrypt from 'bcrypt';
 import UserModel, { User } from '../models/user';
 import { userObject, mapUserList } from '../utils/user'
+import { generateToken } from './authService'
 
 const saltRounds = 10;
 
-export const getUserService = async (body: User) => {
+export const getUserService = async (payload: User) => {
+    const { _id }: any = payload;
     const user = await UserModel.find({
-        _id: body._id
+        _id
     });
     return mapUserList(user);
 }
@@ -29,8 +31,12 @@ export const registerService = async (body: User) => {
     try {
         const hashedPassword = await bcrypt.hash(password, saltRounds);
         body.password = hashedPassword;
-        const user = await UserModel.create(body);
-        return { message: 'Added successfully', user };
+        const result = await UserModel.create(body);
+        const payload = {
+            _id: result._id,
+            email: result.email
+        }
+        if (result) return generateToken(payload);
     } catch (error) {
         return { message: 'Error hashing pasword:', error };
     }
@@ -42,7 +48,11 @@ export const loginService = async (body: User) => {
     if (checkUser) {
         try {
             const result = await bcrypt.compare(password, checkUser.password);
-            if (result) return userObject(checkUser);
+            const payload = {
+                _id: checkUser._id,
+                email: checkUser.email
+            }
+            if (result) return generateToken(payload);
             else return { message: 'Invalid email or password' };
         } catch (error) {
             return { message: `Error comparing passwords:  `, error };
@@ -50,22 +60,19 @@ export const loginService = async (body: User) => {
     } else return { message: 'Invalid email or password' };
 };
 
-export const updateUserService = async (body: User) => {
-    const { _id, password }: any = body;
-    if (password) {
+export const updateUserService = async (payload: User, body: User) => {
+    const { _id }: any = payload;
+    const { password }: any = body;
+    if (body.password) {
         try {
             const hashedPassword = await bcrypt.hash(password, saltRounds);
             body.password = hashedPassword;
-            const user = await UserModel.updateOne({
-                _id
-            }, { $set: body });
-            return { message: 'Updated successfully', user };
+            const user = await UserModel.findByIdAndUpdate(_id, body, { new: true });
+            if (user) return { message: 'Updated successfully' };
         } catch (error) {
             return { message: 'Error hashing pasword:', error };
         }
     }
-    const user = await UserModel.updateOne({
-        _id
-    }, { $set: body });
-    return { message: 'Updated successfully', user };
+    const user = await UserModel.findByIdAndUpdate(_id, body, { new: true });
+    if (user) return { message: 'Updated successfully' };
 }

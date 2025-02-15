@@ -1,11 +1,13 @@
 import { Request, Response } from "express";
 import * as userService from '../services/userService';
 import * as userSchema from '../schemas/userSchema';
+import { User } from '../models/user';
 
 export const getUser = async (req: Request, res: Response) => {
+    const payload = req.user as User;
     try {
-        await userSchema.getUser.validate(req.body);
-        const user = await userService.getUserService(req.body);
+        await userSchema.getUser.validate(payload);
+        const user = await userService.getUserService(payload);
         res.status(200).json(user);
     } catch (error) {
         if (error instanceof Error)
@@ -37,9 +39,11 @@ export const login = async (req: Request, res: Response) => {
 
 
 export const updateUser = async (req: Request, res: Response) => {
+    const payload = req.user as User;
+    const body = req.body as User;
     try {
-        await userSchema.updateUser.validate(req.body);
-        const user = await userService.updateUserService(req.body);
+        await userSchema.updateUser.validate(body);
+        const user = await userService.updateUserService(payload, body);
         res.status(200).json(user);
     } catch (error) {
         if (error instanceof Error)

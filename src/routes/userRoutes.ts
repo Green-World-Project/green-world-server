@@ -1,11 +1,12 @@
-import express from 'express'
-import * as userController from '../controllers/userController'
+import express from 'express';
+import { verifyToken } from '../middlewares/authMiddleware'
+import * as userController from '../controllers/userController';
 
 const router = express.Router();
 
-router.get("/user", userController.getUser);
+router.get("/user", verifyToken, userController.getUser);
 router.post("/register", userController.register);
-router.get("/login", userController.login);
-router.put("/user/edit", userController.updateUser);
+router.post("/login", userController.login);
+router.put("/user/edit", verifyToken, userController.updateUser);
 
 export default router;
