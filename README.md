@@ -1,24 +1,3 @@
----
-title: Green World API Documentation
-language_tabs:
-  - shell: Shell
-  - http: HTTP
-  - javascript: JavaScript
-  - ruby: Ruby
-  - python: Python
-  - php: PHP
-  - java: Java
-  - go: Go
-toc_footers: []
-includes: []
-search: true
-code_clipboard: true
-highlight_theme: darkula
-headingLevel: 2
-generator: "@tarslib/widdershins v4.0.27"
-
----
-
 # Green World API Documentation
 
 Base URLs:
@@ -50,10 +29,11 @@ POST /user/login
 
 > Response Examples
 
-> 200 Response
-
 ```json
-{}
+{
+  "email": "Alejandrin_Pagac99@hotmail.com",
+  "password": "h3Xl0nL1UklvkA6"
+}
 ```
 
 ### Responses
@@ -104,7 +84,7 @@ POST /user/signup
   "username": "Nettie Halvorson",
   "email": "Alejandrin_Pagac99@hotmail.com",
   "phoneNumber": "(616) 794-0136",
-  "age": 34130795,
+  "age": 34,
   "gender": "male",
   "password": "h3Xl0nL1UklvkA6"
 }
@@ -125,9 +105,7 @@ PUT /user/{username}
 > Body Parameters
 
 ```json
-{
-  "_id": "string"
-}
+{}
 ```
 
 ### Params
@@ -136,19 +114,19 @@ PUT /user/{username}
 |---|---|---|---|---|
 |username|path|string| yes |none|
 |body|body|object| no |none|
-|» _id|body|string| yes |none|
 
 > Response Examples
 
 ```json
 {
-  "firstName": "Raghda",
-  "lastName": "Elsayed",
-  "phoneNumber": "01500000",
-  "age": 22,
+  "firstName": "Monte",
+  "lastName": "Mueller",
+  "username": "Kathy Leannon",
+  "email": "Elvis_Abshire82@gmail.com",
+  "phoneNumber": "(568) 310-5989",
+  "age": 29,
   "gender": "female",
-  "email": "raghda@gmail.com",
-  "password": "password"
+  "password": "LHY7hi000eNscDO"
 }
 ```
 
@@ -166,12 +144,12 @@ HTTP Status Code **200**
 |---|---|---|---|---|---|
 |» firstName|string|true|none||none|
 |» lastName|string|true|none||none|
-|» username|string|true|none||none|
-|» email|string|true|none||none|
-|» phoneNumber|string|true|none||none|
-|» age|integer|true|none||none|
-|» gender|string|true|none||none|
-|» password|string|true|none||none|
+|» username|string|false|none||none|
+|» email|string|false|none||none|
+|» phoneNumber|string|false|none||none|
+|» age|integer|false|none||none|
+|» gender|string|false|none||none|
+|» password|string|false|none||none|
 
 # Data Schema
 
