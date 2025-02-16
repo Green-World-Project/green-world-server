@@ -1,3 +1,24 @@
+---
+title: Green World API Documentation
+language_tabs:
+  - shell: Shell
+  - http: HTTP
+  - javascript: JavaScript
+  - ruby: Ruby
+  - python: Python
+  - php: PHP
+  - java: Java
+  - go: Go
+toc_footers: []
+includes: []
+search: true
+code_clipboard: true
+highlight_theme: darkula
+headingLevel: 2
+generator: "@tarslib/widdershins v4.0.27"
+
+---
+
 # Green World API Documentation
 
 Base URLs:
@@ -8,7 +29,7 @@ Base URLs:
 
 ## POST Log In User
 
-POST /user/login
+POST /login
 
 > Body Parameters
 
@@ -44,9 +65,9 @@ POST /user/login
 
 ### Responses Data Schema
 
-## POST Sign Up User
+## POST Register
 
-POST /user/signup
+POST /register
 
 > Body Parameters
 
@@ -100,7 +121,7 @@ POST /user/signup
 
 ## PUT Update User
 
-PUT /user/{username}
+PUT /user/edit
 
 > Body Parameters
 
@@ -112,7 +133,6 @@ PUT /user/{username}
 
 |Name|Location|Type|Required|Description|
 |---|---|---|---|---|
-|username|path|string| yes |none|
 |body|body|object| no |none|
 
 > Response Examples

@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import UserModel, { User } from '../models/user';
-import { userObject, mapUserList } from '../utils/user'
+import { mapUserList } from '../utils/user'
 import { generateToken } from './authService'
 
 const saltRounds = 10;

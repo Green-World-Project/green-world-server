@@ -20,7 +20,6 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction): vo
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (error, user) => {
         if (error) return res.sendStatus(401);
         req.user = user as User;
-        console.log(user);
         next();
     });
 }
