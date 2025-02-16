@@ -26,7 +26,7 @@ export const registerService = async (body: User) => {
         let existsMessage: User = {};
         if (email === checkUser.email) existsMessage.email = 'Email already exists';
         if (phoneNumber === checkUser.phoneNumber) existsMessage.phoneNumber = 'Phone number already exists';
-        return existsMessage;
+        return { ...existsMessage, status: 409 };
     }
     try {
         const hashedPassword = await bcrypt.hash(password, saltRounds);
@@ -75,4 +75,8 @@ export const updateUserService = async (payload: User, body: User) => {
     }
     const user = await UserModel.findByIdAndUpdate(_id, body, { new: true });
     if (user) return { message: 'Updated successfully' };
+}
+
+function sendStatus(arg0: number) {
+    throw new Error('Function not implemented.');
 }
