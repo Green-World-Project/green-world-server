@@ -26,7 +26,7 @@ export const registerService = async (body: User) => {
         let existsMessage: User = {};
         if (email === checkUser.email) existsMessage.email = 'Email already exists';
         if (phoneNumber === checkUser.phoneNumber) existsMessage.phoneNumber = 'Phone number already exists';
-        return { ...existsMessage, status: 409 };
+        throw new Error(Object.values(existsMessage).join(' & '));
     }
     try {
         const hashedPassword = await bcrypt.hash(password, saltRounds);
