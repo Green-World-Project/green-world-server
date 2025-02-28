@@ -1,16 +1,18 @@
 import bcrypt from 'bcrypt';
 import UserModel, { User } from '../models/user';
-import { mapUserList } from '../utils/user'
+import { userObject, mapUserList } from '../utils/user'
 import { generateToken } from './authService'
 
 const saltRounds = 10;
 
 export const getUserService = async (payload: User) => {
     const { _id }: any = payload;
-    const user = await UserModel.find({
-        _id
-    });
-    return mapUserList(user);
+    const user = await UserModel.findById(_id);
+    if (user) {
+        return userObject(user);
+    } else {
+        throw new Error('User not found');
+    }
 }
 
 export const registerService = async (body: User) => {
@@ -75,8 +77,4 @@ export const updateUserService = async (payload: User, body: User) => {
     }
     const user = await UserModel.findByIdAndUpdate(_id, body, { new: true });
     if (user) return { message: 'Updated successfully' };
-}
-
-function sendStatus(arg0: number) {
-    throw new Error('Function not implemented.');
 }

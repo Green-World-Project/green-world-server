@@ -1,22 +1,16 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
-const folderSchema = new mongoose.Schema({
-    folders: [
-        {
-            plantName: { Type: String, required: true },
-            wateringTime: Number,
-            watering: { Type: Boolean, default: false },
-            // wateringTimer: 
-        }
-    ]
-})
+export interface PCS {
+    plantName: String,
+    wateringTime: number,
+    watering: Boolean
+}
 
 const pcsSchema = new mongoose.Schema({
-    userID: {
-        type: mongoose.SchemaTypes.ObjectId,
-        ref: "User"
-    },
-    folders: folderSchema
+    userID: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    plantName: { type: String, required: true },
+    wateringTime: Number,
+    watering: { type: Boolean, default: false }
 });
 
-export default mongoose.model(`PCS`, pcsSchema, `pcs`)
+export default mongoose.model(`PCS`, pcsSchema, `pcs`);

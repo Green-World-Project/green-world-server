@@ -1,15 +1,11 @@
 import * as Yup from 'yup';
 
-export const getUser = Yup.object({
-    _id: Yup.string().required()
-})
-
-export const login = Yup.object({
+export const loginSchema = Yup.object({
     email: Yup.string().email().required(),
     password: Yup.string().required()
 })
 
-export const signup = Yup.object({
+export const signupSchema = Yup.object({
     firstName: Yup.string().required(),
     lastName: Yup.string().required(),
     email: Yup.string().email().required(),
@@ -19,7 +15,7 @@ export const signup = Yup.object({
     password: Yup.string().required()
 })
 
-export const updateUser = Yup.object({
+export const updateUserSchema = Yup.object({
     firstName: Yup.string(),
     lastName: Yup.string(),
     email: Yup.string().email(),

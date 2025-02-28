@@ -3,9 +3,8 @@ import 'dotenv/config';
 
 const mongoDB = process.env.MONGODB_URI;
 
-if (!mongoDB) {
+if (!mongoDB) 
     throw new Error('MONGODB_URI is not defined in the environment variables');
-}
 
 let isConnected = false;
 

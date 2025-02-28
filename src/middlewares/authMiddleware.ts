@@ -12,7 +12,7 @@ declare global {
 }
 
 export const verifyToken = (req: Request, res: Response, next: NextFunction): void => {
-    if (!process.env.ACCESS_TOKEN_SECRET) throw new Error("ACCESS_TOKEN_SECRET is not defined");
+    if (!process.env.ACCESS_TOKEN_SECRET) throw new Error("Signature is not defined");
     const authHeader = req.headers.authorization;
     const token = authHeader && authHeader.split(' ')[1]
     if (!token) throw res.sendStatus(401);
