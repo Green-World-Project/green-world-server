@@ -22,6 +22,6 @@ export const createHistoryService = async (payload: User, body: History) => {
             }
         });
         if (!result) throw new Error("History not Found");
-        return "added successfully";
+        return "Added successfully";
     } else throw new Error("Unuthorized");
 }
