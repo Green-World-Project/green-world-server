@@ -13,12 +13,13 @@ export const addPlantService = async (payload: User, body: PCS) => {
     const { _id } = payload;
     const checkUser = await UserModel.findById(_id);
     if (checkUser) {
-        await PCSModel.create({
+        const result = await PCSModel.create({
             userID: checkUser._id,
             plantName: body.plantName,
             wateringTime: body.wateringTime,
             watering: body.watering
         });
+        if (!result) throw new Error("Plant not Found Care System");
         return "added successfully";
     } else throw new Error("Unuthorized");
 }
@@ -27,7 +28,8 @@ export const updatePlantService = async (payload: User, id: String, body: PCS) =
     const { _id } = payload;
     const checkUser = await UserModel.findById(_id);
     if (checkUser) {
-        await PCSModel.findByIdAndUpdate(id, body);
+        const result = await PCSModel.findByIdAndUpdate(id, body);
+        if (!result) throw new Error("Plant not Found Care System");
         return "updated successfully";
     } else throw new Error("Unuthorized");
 }
@@ -36,7 +38,8 @@ export const deletePlantService = async (payload: User, id: String) => {
     const { _id } = payload;
     const checkUser = await UserModel.findById(_id);
     if (checkUser) {
-        await PCSModel.findByIdAndDelete(id);
+        const result = await PCSModel.findByIdAndDelete(id);
+        if (!result) throw new Error("Plant not Found Care System");
         return "deleted successfully";
     } else throw new Error("Unuthorized");
 }
