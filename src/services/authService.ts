@@ -7,5 +7,5 @@ export const generateToken = (user: User = {}) => {
         throw new Error("Signature is not defined");
     }
     const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "7d" });
-    return { "Bearer Token": token };
+    return token;
 }
