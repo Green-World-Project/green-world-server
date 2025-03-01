@@ -1,7 +1,6 @@
 import * as Yup from 'yup';
 
 export const addPlantSchema = Yup.object({
-    userID: Yup.string().required(),
     plantName: Yup.string().required(),
     wateringTime: Yup.number().required(),
     watering: Yup.boolean().default(false).required()
