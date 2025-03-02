@@ -1,7 +1,6 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Types, Schema } from "mongoose";
 
 export interface History {
-    userID: String,
     fileName: String,
     info: {
         name: String,
@@ -13,8 +12,8 @@ const historySchema = new mongoose.Schema({
     userID: { type: Schema.Types.ObjectId, ref: "User", required: true },
     fileName: { type: String, required: true },
     info: {
-        name: { String, required: true },
-        condition: { String, required: true }
+        name: { type: String, required: true },
+        condition: { type: String, required: true }
     }
 });
 
@@ -23,4 +22,4 @@ historySchema.pre("save", function (next) {
     next();
 });
 
-export default mongoose.model(`History`, historySchema, `history`)
+export default mongoose.model(`History`, historySchema, `history`);

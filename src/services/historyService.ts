@@ -1,27 +1,45 @@
 import UserModel, { User } from '../models/user';
 import historyModel, { History } from '../models/history';
+import { mapplantIdentList } from '../utils/plantIdent'
+import { v2 as cloudinary } from 'cloudinary';
+import path from 'path';
 
 export const getHistoryService = async (payload: User) => {
     const { _id } = payload;
     const checkUser = await UserModel.findById(_id);
     if (checkUser) {
-        return await historyModel.find({ userID: checkUser._id });
-    } throw new Error("History not Found");
+        const result = await historyModel.find({ userID: checkUser._id });
+
+        if (result) return mapplantIdentList(result);
+        else throw new Error("History not Found");
+    } throw new Error("Unuthorized");
 }
 
-export const createHistoryService = async (payload: User, body: History) => {
-    const { _id } = payload;
-    const checkUser = await UserModel.findById(_id);
-    if (checkUser) {
+
+export const addToHistory = async (user: any, body: any) => {
+    try {
         const result = await historyModel.create({
-            userID: checkUser._id,
-            fileName: body.fileName,
+            userID: user._id,
+            fileName: body.originalname,
             info: {
-                name: body.info.name,
-                condition: body.info.condition
+                name: "body.info.name",
+                condition: "body.info.condition"
             }
         });
-        if (!result) throw new Error("History not Found");
-        return "Added successfully";
-    } else throw new Error("Unuthorized");
+        if (!result) throw new Error("History not added");
+        try {
+            const uploadStream = cloudinary.uploader.upload_stream(
+                {
+                    folder: "history",
+                    public_id: path.basename(result.fileName, path.extname(body.originalname)),
+                    resource_type: "image"
+                }
+            );
+            uploadStream.end(body.buffer);
+        } catch (error) {
+            console.error("Upload Error:", error);
+        }
+    } catch (error) {
+        throw new Error("History not Found");
+    }
 }

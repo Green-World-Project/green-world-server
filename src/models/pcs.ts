@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Types, Schema } from "mongoose";
 
 export interface PCS {
     plantName: String,
