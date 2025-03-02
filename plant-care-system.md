@@ -50,8 +50,9 @@ POST /user/pcs
 
 ```json
 {
-  "plantName": "Sun Flower",
-  "wateringTime": 7
+  "plantName": "string",
+  "wateringTime": 1,
+  "watering": true
 }
 ```
 
@@ -59,9 +60,7 @@ POST /user/pcs
 
 |Name|Location|Type|Required|Description|
 |---|---|---|---|---|
-|body|body|object| no |none|
-|» plantName|body|string| yes |none|
-|» wateringTime|body|integer| yes |none|
+|body|body|[Plant Care System Schema](#schemaplant care system schema)| no |none|
 
 > Response Examples
 
@@ -151,4 +150,28 @@ DELETE /user/pcs/{id}
 ### Responses Data Schema
 
 # Data Schema
+
+<h2 id="tocS_Plant Care System Schema">Plant Care System Schema</h2>
+
+<a id="schemaplant care system schema"></a>
+<a id="schema_Plant Care System Schema"></a>
+<a id="tocSplant care system schema"></a>
+<a id="tocsplant care system schema"></a>
+
+```json
+{
+  "plantName": "string",
+  "wateringTime": 1,
+  "watering": true
+}
+
+```
+
+### Attribute
+
+|Name|Type|Required|Restrictions|Title|Description|
+|---|---|---|---|---|---|
+|plantName|string|true|none||none|
+|wateringTime|integer|true|none||none|
+|watering|boolean|true|none||none|
 
