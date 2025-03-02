@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import 'dotenv/config'
 import { User } from '../models/user';
 
-export const generateToken = (user: User = {}) => {
+export const generateTokenService = (user: User = {}) => {
     if (!process.env.ACCESS_TOKEN_SECRET) {
         throw new Error("Signature is not defined");
     }

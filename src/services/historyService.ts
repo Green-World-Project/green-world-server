@@ -16,30 +16,27 @@ export const getHistoryService = async (payload: User) => {
 }
 
 
-export const addToHistory = async (user: any, body: any) => {
-    try {
-        const result = await historyModel.create({
-            userID: user._id,
-            fileName: body.originalname,
-            info: {
-                name: "body.info.name",
-                condition: "body.info.condition"
-            }
-        });
-        if (!result) throw new Error("History not added");
-        try {
-            const uploadStream = cloudinary.uploader.upload_stream(
-                {
-                    folder: "history",
-                    public_id: path.basename(result.fileName, path.extname(body.originalname)),
-                    resource_type: "image"
-                }
-            );
-            uploadStream.end(body.buffer);
-        } catch (error) {
-            console.error("Upload Error:", error);
+export const addToHistoryService = async (user: any, body: any) => {
+    const result = await historyModel.create({
+        userID: user._id,
+        fileName: body.originalname,
+        info: {
+            name: "body.info.name",
+            condition: "body.info.condition"
         }
+    });
+
+    if (!result) throw new Error("History not added");
+    try {
+        const uploadStream = cloudinary.uploader.upload_stream(
+            {
+                folder: "history",
+                public_id: path.basename(result.fileName, path.extname(body.originalname)),
+                resource_type: "image"
+            }
+        );
+        uploadStream.end(body.buffer);
     } catch (error) {
-        throw new Error("History not Found");
+        console.error("Upload Error:", error);
     }
 }

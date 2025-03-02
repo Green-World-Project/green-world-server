@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import UserModel, { User } from '../models/user';
-import { userObject, mapUserList } from '../utils/user'
-import { generateToken } from './authService'
+import { userObject } from '../utils/user'
+import { generateTokenService } from './authService'
 
 const saltRounds = 10;
 
@@ -35,7 +35,7 @@ export const registerService = async (body: User) => {
             _id: result._id,
             email: result.email
         }
-        if (result) return generateToken(payload);
+        if (result) return generateTokenService(payload);
     } catch (error) {
         return { message: 'Error hashing pasword:', error };
     }
@@ -51,7 +51,7 @@ export const loginService = async (body: User) => {
                 _id: checkUser._id,
                 email: checkUser.email
             }
-            if (result) return generateToken(payload);
+            if (result) return generateTokenService(payload);
             else return { message: 'Invalid email or password' };
         } catch (error) {
             return { message: `Error comparing passwords:  `, error };
