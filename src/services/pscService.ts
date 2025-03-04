@@ -48,7 +48,7 @@ const PCSTimer = async () => {
     const plants = await PCSModel.find({});
     plants.forEach(plant => {
         const wateringTime = (plant.wateringTime ?? 0) * 24 * 60 * 60 * 1000;
-        // const wateringTime = (plant.wateringTime ?? 0) * 10000;
+        // const wateringTime = (plant.wateringTime ?? 0) * 60 * 1000;
         setInterval(async () => {
             await PCSModel.updateOne(
                 { _id: plant._id },
