@@ -9,7 +9,6 @@ export const getHistoryService = async (payload: User) => {
     const checkUser = await UserModel.findById(_id);
     if (checkUser) {
         const result = await historyModel.find({ userID: checkUser._id });
-
         if (result) return mapplantIdentList(result);
         else throw new Error("History not Found");
     } throw new Error("Unuthorized");
