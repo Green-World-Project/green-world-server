@@ -4,6 +4,6 @@
 
 [User Documentation](user-documentation.md)
 
-[Plant Care System Documentation](plant-care-system.md)
+[Plant Care System Documentation](plant-care-system-documentation.md)
 
-[Plant Identification Documentation](plant-identification.md)
+[Plant Identification Documentation](plant-identification-documentation.md)

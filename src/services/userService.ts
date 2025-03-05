@@ -9,7 +9,7 @@ export const getUserService = async (payload: User) => {
     const { _id }: any = payload;
     const user = await UserModel.findById(_id);
     if (user) return userObject(user);
-    else throw new Error('Unuthorized');
+    else throw new Error('Unauthorized');
 }
 
 export const registerService = async (body: User) => {

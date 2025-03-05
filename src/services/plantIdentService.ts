@@ -18,5 +18,5 @@ export const plantIdentService = async (payload: User, body: any) => {
         } catch (error) {
             throw new Error("Plant identification failed" + error);
         }
-    } else throw new Error("Unuthorized");
+    } else throw new Error("Unauthorized");
 }

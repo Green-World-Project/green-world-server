@@ -31,7 +31,22 @@ GET /user/history
 > 200 Response
 
 ```json
-{}
+[
+    {
+        "photo": "https://res.cloudinary.com/dtbrnazjf/image/upload/history/67c85dce21d9c1370cf38005_00fee259-67b7-4dd7-8b36-12503bbdba14___RS_HL_2681.jpeg",
+        "info": {
+            "name": "Cherry (including sour)",
+            "condition": "healthy"
+        }
+    },
+    {
+        "photo": "https://res.cloudinary.com/dtbrnazjf/image/upload/history/67c85ebfaad46f83d4165c3c_00fee259-67b7-4dd7-8b36-12503bbdba14___RS_HL_2681.jpeg",
+        "info": {
+            "name": "Cherry (including sour)",
+            "condition": "healthy"
+        }
+    }
+]
 ```
 
 ### Responses
@@ -65,7 +80,10 @@ photo: file:///home/poula/Pictures/Screenshots/Screenshot from 2025-02-22 18-35-
 > 200 Response
 
 ```json
-{}
+{
+    "name": "Soybean",
+    "condition": "healthy"
+}
 ```
 
 ### Responses
