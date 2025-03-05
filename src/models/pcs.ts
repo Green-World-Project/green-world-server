@@ -1,6 +1,7 @@
 import mongoose, { Types, Schema } from "mongoose";
 
 export interface PCS {
+    _id?: Types.ObjectId,
     plantName: String,
     wateringTime: number,
     watering: Boolean

@@ -1,11 +1,13 @@
 import UserModel, { User } from '../models/user';
 import PCSModel, { PCS } from '../models/pcs';
+import { mapUserList } from '../utils/pcs';
 
 export const getPlantService = async (payload: User) => {
     const { _id } = payload;
     const checkUser = await UserModel.findById(_id);
     if (checkUser) {
-        return await PCSModel.find({ userID: checkUser._id });
+        const result: PCS[] = await PCSModel.find({ userID: checkUser._id });
+        if (result) return mapUserList(result);
     } else throw new Error("Unauthorized");
 }
 
