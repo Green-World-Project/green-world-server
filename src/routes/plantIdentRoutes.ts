@@ -9,6 +9,6 @@ const upload = multer({
     storage: storage, limits: { fileSize: 500 * 1024 * 1024 } // 10MB limit, adjust as needed
 });
 
-router.post("/user/plant-identification", verifyToken, upload.single('photo'), plantIdentController.plantIdentController);
+router.post("/user/plant-identification", verifyToken, upload.single('file'), plantIdentController.plantIdentController);
 
 export default router;

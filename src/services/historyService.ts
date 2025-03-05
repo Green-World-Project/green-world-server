@@ -15,14 +15,13 @@ export const getHistoryService = async (payload: User) => {
     } throw new Error("Unuthorized");
 }
 
-
-export const addToHistoryService = async (user: any, body: any) => {
+export const addToHistoryService = async (user: any, body: any, info: any) => {
     const result = await historyModel.create({
         userID: user._id,
         fileName: body.originalname,
         info: {
-            name: "body.info.name",
-            condition: "body.info.condition"
+            name: info.name,
+            condition: info.condition
         }
     });
 
