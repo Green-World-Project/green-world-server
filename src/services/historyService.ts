@@ -35,6 +35,6 @@ export const addToHistoryService = async (user: any, body: any, info: any) => {
         );
         uploadStream.end(body.buffer);
     } catch (error) {
-        console.error("Upload Error:", error);
+        throw new Error("Upload Error:" + error);
     }
 }
