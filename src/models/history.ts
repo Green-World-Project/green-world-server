@@ -1,6 +1,7 @@
 import mongoose, { Types, Schema } from "mongoose";
 
 export interface History {
+    _id?: Types.ObjectId,
     fileName: String,
     info: {
         name: String,
