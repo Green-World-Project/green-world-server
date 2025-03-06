@@ -1,12 +1,12 @@
 import { History } from '../models/history';
 
-export const plantIdentObject = (plant: History) => {
+export const plantIdentObject = (history: History) => {
     return {
-        _id: plant._id,
-        photo: `https://res.cloudinary.com/dtbrnazjf/image/upload/history/${plant.fileName}`,
+        _id: history._id,
+        photo: `https://res.cloudinary.com/dtbrnazjf/image/upload/history/${history.fileName}`,
         info: {
-            name: plant.info.name,
-            condition: plant.info.condition
+            name: history.info.name,
+            condition: history.info.condition
         }
     }
 };
