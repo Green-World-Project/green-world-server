@@ -1,6 +1,6 @@
 import UserModel, { User } from '../models/user';
 import historyModel, { History } from '../models/history';
-import { mapplantIdentList } from '../utils/plantIdent'
+import { mapPlantIdentList } from '../utils/plantIdent'
 import { v2 as cloudinary } from 'cloudinary';
 import path from 'path';
 
@@ -9,7 +9,7 @@ export const getHistoryService = async (payload: User) => {
     const checkUser = await UserModel.findById(_id);
     if (checkUser) {
         const result = await historyModel.find({ userID: checkUser._id });
-        if (result) return mapplantIdentList(result);
+        if (result) return mapPlantIdentList(result);
         else throw new Error("History not Found");
     } throw new Error("Unauthorized");
 };

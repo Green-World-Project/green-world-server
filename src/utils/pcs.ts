@@ -1,14 +1,14 @@
-import { PCS } from '../models/pcs';
+import { Plant } from '../models/pcs';
 
-export const userObject = (pcs: PCS) => {
+export const plantObject = (plant: Plant) => {
     return {
-        _id: pcs._id,
-        plantName: pcs.plantName,
-        wateringTime: pcs.wateringTime,
-        watering: pcs.watering,
+        _id: plant._id,
+        plantName: plant.plantName,
+        wateringTime: plant.wateringTime,
+        watering: plant.watering,
     }
 };
 
-export const mapUserList = (pcsList: PCS[]) => {
-    return pcsList.map((pcs) => userObject(pcs));
+export const mapPlantsList = (plants: Plant[]) => {
+    return plants.map((pcs) => plantObject(pcs));
 };

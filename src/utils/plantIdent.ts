@@ -11,6 +11,6 @@ export const plantIdentObject = (history: History) => {
     }
 };
 
-export const mapplantIdentList = (dataList: any[]) => {
+export const mapPlantIdentList = (dataList: any[]) => {
     return dataList.map((data) => plantIdentObject(data));
 };

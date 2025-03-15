@@ -10,7 +10,3 @@ export const userObject = (user: User) => {
         gender: user.gender,
     }
 };
-
-export const mapUserList = (userList: User[]) => {
-    return userList.map((user) => userObject(user));
-};

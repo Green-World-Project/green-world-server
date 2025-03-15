@@ -1,6 +1,6 @@
 import mongoose, { Types, Schema } from "mongoose";
 
-export interface PCS {
+export interface Plant {
     _id?: Types.ObjectId,
     plantName: String,
     wateringTime: number,
