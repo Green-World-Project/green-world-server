@@ -3,6 +3,8 @@ import { addToHistoryService } from '../services/historyService';
 import axios from 'axios';
 import FormData from 'form-data';
 
+export let statusCode: number;
+
 export const plantIdentService = async (payload: User, body: any) => {
     const { _id } = payload;
     const checkUser = await UserModel.findById(_id);
@@ -14,9 +16,16 @@ export const plantIdentService = async (payload: User, body: any) => {
                 headers: { ...formData.getHeaders() }
             });
             addToHistoryService(checkUser, body, response.data);
+            statusCode = 201;
             return response.data;
         } catch (error) {
-            throw new Error("Plant identification failed" + error);
+            if (axios.isAxiosError(error) && error.response?.status === 422) {
+                statusCode = 422;
+                throw new Error("This is not a plant; it's an artificial object designed to resemble one.")
+            } else {
+                statusCode = 500;
+                throw new Error("Plant identification failed");
+            }
         }
     } else throw new Error("Unauthorized");
-}
+};

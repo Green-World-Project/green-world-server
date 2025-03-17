@@ -12,8 +12,8 @@ export const getUserService = async (payload: User) => {
     else throw new Error('Unauthorized');
 }
 
-export const registerService = async (body: User) => {
-    const { email, phoneNumber, password }: any = body;
+export const registerService = async (user: User) => {
+    const { email, phoneNumber, password }: any = user;
     const checkUser = await UserModel.findOne({
         $or: [
             { email },
@@ -29,8 +29,8 @@ export const registerService = async (body: User) => {
     }
     try {
         const hashedPassword = await bcrypt.hash(password, saltRounds);
-        body.password = hashedPassword;
-        const result = await UserModel.create(body);
+        user.password = hashedPassword;
+        const result = await UserModel.create(user);
         const payload = {
             _id: result._id,
             email: result.email
@@ -41,8 +41,8 @@ export const registerService = async (body: User) => {
     }
 }
 
-export const loginService = async (body: User) => {
-    const { email, password }: any = body;
+export const loginService = async (user: User) => {
+    const { email, password }: any = user;
     const checkUser = await UserModel.findOne({ email });
     if (checkUser) {
         try {
