@@ -21,7 +21,7 @@ export const plantIdentService = async (payload: User, body: any) => {
         } catch (error) {
             if (axios.isAxiosError(error) && error.response?.status === 422) {
                 statusCode = 422;
-                throw new Error("This is not a plant; it's an artificial object designed to resemble one.")
+                throw new Error("Unable to identify please send a photo of a plant")
             } else {
                 statusCode = 500;
                 throw new Error("Plant identification failed");
