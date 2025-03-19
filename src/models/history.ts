@@ -6,7 +6,8 @@ export interface History {
     info: {
         name: String,
         condition: String
-    }
+    },
+    createdAt?: Date
 }
 
 const historySchema = new mongoose.Schema({
@@ -15,7 +16,8 @@ const historySchema = new mongoose.Schema({
     info: {
         name: { type: String, required: true },
         condition: { type: String, required: true }
-    }
+    },
+    createdAt: { type: Date, default: Date.now }
 });
 
 historySchema.pre("save", function (next) {

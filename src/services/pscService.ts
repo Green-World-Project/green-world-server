@@ -6,8 +6,8 @@ export const getPlantService = async (payload: User) => {
     const { _id } = payload;
     const checkUser = await UserModel.findById(_id);
     if (checkUser) {
-        const result: Plant[] = await PCSModel.find({ userID: checkUser._id });
-        if (result) return mapPlantsList(result);
+        const result = await PCSModel.find({ userID: checkUser._id }).sort({ createdAt: -1 });
+        if (result && result.length > 0) return mapPlantsList(result as Plant[]);
     } else throw new Error("Unauthorized");
 }
 
@@ -18,6 +18,7 @@ export const addPlantService = async (payload: User, plant: Plant) => {
         const result = await PCSModel.create({
             userID: checkUser._id,
             plantName: plant.plantName,
+            liter: plant.liter,
             wateringTime: plant.wateringTime,
             watering: plant.watering
         });

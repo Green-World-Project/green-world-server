@@ -7,10 +7,11 @@ export const plantIdentObject = (history: History) => {
         info: {
             name: history.info.name,
             condition: history.info.condition
-        }
+        },
+        createAt: history.createdAt?.toLocaleString()
     }
 };
 
-export const mapPlantIdentList = (dataList: any[]) => {
+export const mapHistoryList = (dataList: any[]) => {
     return dataList.map((data) => plantIdentObject(data));
 };
