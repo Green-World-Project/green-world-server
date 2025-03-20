@@ -1,6 +1,6 @@
 import UserModel, { User } from '../models/user';
 import historyModel, { History } from '../models/history';
-import { mapHistoryList } from '../utils/plantIdent'
+import { mapHistoryList } from '../utils/history'
 import { v2 as cloudinary } from 'cloudinary';
 import path from 'path';
 

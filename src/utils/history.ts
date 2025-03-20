@@ -1,6 +1,6 @@
 import { History } from '../models/history';
 
-export const plantIdentObject = (history: History) => {
+export const historyObject = (history: History) => {
     return {
         _id: history._id,
         photo: `https://res.cloudinary.com/dtbrnazjf/image/upload/history/${history.fileName}`,
@@ -12,6 +12,6 @@ export const plantIdentObject = (history: History) => {
     }
 };
 
-export const mapHistoryList = (dataList: any[]) => {
-    return dataList.map((data) => plantIdentObject(data));
+export const mapHistoryList = (historyList: History[]) => {
+    return historyList.map((history) => historyObject(history));
 };

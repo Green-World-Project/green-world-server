@@ -18,7 +18,8 @@ const userSchema = new mongoose.Schema({
     phoneNumber: { type: String, required: true, unique: true },
     age: { type: Number, default: null, min: 16, max: 100 },
     gender: { type: String, default: null },
-    password: { type: String, required: true }
+    password: { type: String, required: true },
+    createdAt: { type: Date, default: Date.now }
 });
 
 export default mongoose.model('User', userSchema, "users");
