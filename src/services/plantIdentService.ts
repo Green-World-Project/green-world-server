@@ -1,21 +1,21 @@
 import UserModel, { User } from '../models/user';
-import { addToHistoryService } from '../services/historyService';
+import { addToHistoryService, multerFile } from '../services/historyService';
 import axios from 'axios';
 import FormData from 'form-data';
 
 export let statusCode: number;
 
-export const plantIdentService = async (payload: User, body: any) => {
+export const plantIdentService = async (payload: User, file: multerFile) => {
     const { _id } = payload;
     const checkUser = await UserModel.findById(_id);
     if (checkUser) {
         try {
             const formData = new FormData();
-            formData.append('file', body.buffer, body.originalname);
+            formData.append('file', file.buffer, file.originalname);
             const response = await axios.post(`${process.env.PLANT_IDENTIFICATION_SESSION}/predict`, formData, {
                 headers: { ...formData.getHeaders() }
             });
-            addToHistoryService(checkUser, body, response.data);
+            addToHistoryService(checkUser, file, response.data);
             statusCode = 201;
             return response.data;
         } catch (error) {

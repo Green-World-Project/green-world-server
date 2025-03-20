@@ -4,6 +4,20 @@ import { mapHistoryList } from '../utils/history'
 import { v2 as cloudinary } from 'cloudinary';
 import path from 'path';
 
+interface info {
+    name: string,
+    condition: string
+};
+
+export interface multerFile {
+    fieldname: string,
+    originalname: string,
+    buffer: Buffer,
+    encoding: string,
+    mimetype: string,
+    size: number;
+};
+
 export const getHistoryService = async (payload: User) => {
     const { _id } = payload;
     const checkUser = await UserModel.findById(_id);
@@ -14,10 +28,10 @@ export const getHistoryService = async (payload: User) => {
     } throw new Error("Unauthorized");
 };
 
-export const addToHistoryService = async (user: any, body: any, info: any) => {
+export const addToHistoryService = async (user: User, file: multerFile, info: info) => {
     const result = await historyModel.create({
         userID: user._id,
-        fileName: body.originalname,
+        fileName: file.originalname,
         info: {
             name: info.name,
             condition: info.condition
@@ -28,11 +42,11 @@ export const addToHistoryService = async (user: any, body: any, info: any) => {
         const uploadStream = cloudinary.uploader.upload_stream(
             {
                 folder: "history",
-                public_id: path.basename(result.fileName, path.extname(body.originalname)),
+                public_id: path.basename(result.fileName, path.extname(file.originalname)),
                 resource_type: "image"
             }
         )
-        uploadStream.end(body.buffer);
+        uploadStream.end(file.buffer);
     } catch (error) {
         throw new Error("Upload Error:" + error);
     };
