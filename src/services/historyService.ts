@@ -28,7 +28,7 @@ export const getHistoryService = async (payload: User) => {
     } throw new Error("Unauthorized");
 };
 
-export const addToHistoryService = async (user: User, file: multerFile, info: info) => {
+export const addHistoryService = async (user: User, file: multerFile, info: info) => {
     const result = await historyModel.create({
         userID: user._id,
         fileName: file.originalname,
