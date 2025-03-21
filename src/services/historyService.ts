@@ -51,3 +51,13 @@ export const addToHistoryService = async (user: User, file: multerFile, info: in
         throw new Error("Upload Error:" + error);
     };
 };
+
+export const deleteHistoryService = async (payload: User, id: String) => {
+    const { _id } = payload;
+    const checkUser = await UserModel.findById(_id);
+    if (checkUser) {
+        const result = await historyModel.findByIdAndDelete(id);
+        if (!result) throw new Error("Plant not Found Care System");
+        return "Deleted successfully";
+    } else throw new Error("Unauthorized");
+};
