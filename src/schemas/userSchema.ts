@@ -15,12 +15,15 @@ export const signupSchema = Yup.object({
     password: Yup.string().required()
 })
 
-export const updateUserSchema = Yup.object({
+export const updateUserInfoSchema = Yup.object({
     firstName: Yup.string(),
     lastName: Yup.string(),
     email: Yup.string().email(),
     phoneNumber: Yup.string(),
     age: Yup.number().min(16).max(100),
     gender: Yup.string(),
-    password: Yup.string()
+}).noUnknown(true, 'Invalid field in update info');
+
+export const updateUserPasswordSchema = Yup.object({
+    password: Yup.string().required()
 })
