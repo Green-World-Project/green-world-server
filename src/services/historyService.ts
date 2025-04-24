@@ -38,11 +38,14 @@ export const addHistoryService = async (user: User, file: multerFile, info: info
         }
     });
     if (!result) throw new Error("Photo not added in history");
+
+    const publicID = path.basename(result.fileName, path.extname(file.originalname));
+
     try {
         const uploadStream = cloudinary.uploader.upload_stream(
             {
                 folder: "history",
-                public_id: path.basename(result.fileName, path.extname(file.originalname)),
+                public_id: publicID,
                 resource_type: "image"
             }
         )
@@ -58,6 +61,14 @@ export const deleteHistoryService = async (payload: User, id: String) => {
     if (checkUser) {
         const result = await historyModel.findByIdAndDelete(id);
         if (!result) throw new Error("Photo not found in history");
+
+        const publicID = path.basename(result.fileName, path.extname(result.fileName));
+
+        try {
+            await cloudinary.uploader.destroy(`history/${publicID}`);
+        } catch (error) {
+            throw new Error("Error deleting file from Cloudinary: " + error);
+        }
         return "Deleted successfully";
     } else throw new Error("Unauthorized");
 };
