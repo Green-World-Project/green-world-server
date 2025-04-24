@@ -3,7 +3,7 @@ import * as userService from '../services/userService';
 import * as userSchema from '../schemas/userSchema';
 import { User } from '../models/user';
 
-export const getUser = async (req: Request, res: Response) => {
+export const getUserController = async (req: Request, res: Response) => {
     const payload = req.user as User;
     try {
         const user = await userService.getUserService(payload);
@@ -14,7 +14,7 @@ export const getUser = async (req: Request, res: Response) => {
     }
 }
 
-export const register = async (req: Request, res: Response) => {
+export const registerController = async (req: Request, res: Response) => {
     try {
         await userSchema.signupSchema.validate(req.body);
         const user = await userService.registerService(req.body);
@@ -25,7 +25,7 @@ export const register = async (req: Request, res: Response) => {
     }
 }
 
-export const login = async (req: Request, res: Response) => {
+export const loginController = async (req: Request, res: Response) => {
     try {
         await userSchema.loginSchema.validate(req.body);
         const user = await userService.loginService(req.body);
@@ -37,11 +37,24 @@ export const login = async (req: Request, res: Response) => {
 }
 
 
-export const updateUser = async (req: Request, res: Response) => {
+export const updateUserInfoController = async (req: Request, res: Response) => {
     const payload = req.user as User;
     try {
-        await userSchema.updateUserSchema.validate(req.body);
-        const user = await userService.updateUserService(payload, req.body);
+        await userSchema.updateUserInfoSchema.validate(req.body);
+        const user = await userService.updateUserInfoService(payload, req.body);
+        res.status(201).json(user);
+    } catch (error) {
+        if (error instanceof Error)
+            res.status(400).json({ error: error.message })
+    }
+}
+
+
+export const updateUserPasswordController = async (req: Request, res: Response) => {
+    const payload = req.user as User;
+    try {
+        await userSchema.updateUserPasswordSchema.validate(req.body);
+        const user = await userService.updateUserPasswordService(payload, req.body);
         res.status(201).json(user);
     } catch (error) {
         if (error instanceof Error)
