@@ -19,7 +19,8 @@ const userSchema = new mongoose.Schema({
     age: { type: Number, default: null, min: 16, max: 100 },
     gender: { type: String, default: null },
     password: { type: String, required: true },
-    createdAt: { type: Date, default: Date.now }
+    updatedAt: { type: Date, default: Date.now },
+    createdAt: { type: Date, default: Date.now, immutable: true }
 });
 
 export default mongoose.model('User', userSchema, "users");
