@@ -2,12 +2,12 @@ import bcrypt from 'bcrypt';
 import UserModel, { User } from '../models/user';
 import { userObject } from '../utils/user'
 import { generateTokenService } from './authService'
+import { Types } from "mongoose";
 
 const saltRounds = 10;
 
-export const getUserService = async (payload: User) => {
-    const { _id }: any = payload;
-    const user = await UserModel.findById(_id);
+export const getUserService = async (userID: Types.ObjectId) => {
+    const user = await UserModel.findById(userID);
     if (user) return userObject(user);
     else throw new Error('Unauthorized');
 }
@@ -59,19 +59,18 @@ export const loginService = async (user: User) => {
     } else return { message: 'Invalid email or password' };
 };
 
-export const updateUserService = async (payload: User, body: User) => {
-    const { _id }: any = payload;
+export const updateUserService = async (userID: Types.ObjectId, body: User) => {
     const { password }: any = body;
     if (body.password) {
         try {
             const hashedPassword = await bcrypt.hash(password, saltRounds);
             body.password = hashedPassword;
-            const user = await UserModel.findByIdAndUpdate(_id, body, { new: true });
+            const user = await UserModel.findByIdAndUpdate(userID, body, { new: true });
             if (user) return { message: 'Updated successfully' };
         } catch (error) {
             return { message: 'Error hashing pasword:', error };
         }
     }
-    const user = await UserModel.findByIdAndUpdate(_id, body, { new: true });
+    const user = await UserModel.findByIdAndUpdate(userID, body, { new: true });
     if (user) return { message: 'Updated successfully' };
 }

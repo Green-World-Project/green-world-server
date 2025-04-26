@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
 import * as historyService from '../services/historyService';
-import { User } from '../models/user';
 
 export const getHistoryController = async (req: Request, res: Response) => {
-    const payload = req.user as User;
-    try {
-        const response = await historyService.getHistoryService(payload);
+    const userPayload = req.userPayload;
+    if (!userPayload) res.status(400).json({ error: "User payload is missing" });
+    else try {
+        const response = await historyService.getHistoryService(userPayload._id);
         res.status(201).json(response);
     }
     catch (error) {
@@ -14,9 +14,10 @@ export const getHistoryController = async (req: Request, res: Response) => {
 };
 
 export const deleteHistoryController = async (req: Request, res: Response) => {
-    const payload = req.user as User;
-    try {
-        const response = await historyService.deleteHistoryService(payload, req.params.id);
+    const userPayload = req.userPayload;
+    if (!userPayload) res.status(400).json({ error: "User payload is missing" });
+    else try {
+        const response = await historyService.deleteHistoryService(userPayload._id, req.params.id);
         res.status(201).json(response);
     } catch (error) {
         if (error instanceof Error)

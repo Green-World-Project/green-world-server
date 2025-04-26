@@ -3,10 +3,11 @@ import * as plantIdentService from '../services/plantIdentService';
 import { User } from '../models/user';
 
 export const plantIdentController = async (req: Request, res: Response) => {
-    const payload = req.user as User;
-    if (!req.file) throw res.status(400).json({ error: "Photo data is required" });
-    try {
-        const response = await plantIdentService.plantIdentService(payload, req.file);
+    const userPayload = req.userPayload;
+    if (!userPayload) res.status(400).json({ error: "User payload is missing" });
+    else if (!req.file) res.status(400).json({ error: "Photo data is required" });
+    else try {
+        const response = await plantIdentService.plantIdentService(userPayload._id, req.file);
         res.status(plantIdentService.statusCode).json(response)
     }
     catch (error) {

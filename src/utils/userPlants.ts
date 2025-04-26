@@ -1,16 +1,28 @@
-import { userPlant } from '../models/userPlants';
+import { UserPlant } from '../models/userPlants';
+import { Plants } from '../services/userPlantsService'
 
-export const plantObject = (plant: userPlant) => {
+export const plantObject = (plants: Plants, userPlant: UserPlant) => {
     return {
-        _id: plant._id,
-        plantName: plant.plantName,
-        liter: plant.liter,
-        wateringTime: plant.wateringTime,
-        watering: plant.watering,
-        createAt: plant.createdAt?.toLocaleString()
-    }
+        _id: userPlant._id,
+        plant_name: plants.plant_name,
+        waterNeed: userPlant.waterNeed,
+        groundArea: userPlant.groundArea,
+        plantInfo: {
+            ideal_soil_moisture_percentage: plants.ideal_soil_moisture_percentage,
+            optimal_temperature_celsius: plants.optimal_temperature_celsius,
+            light_exposure_hours: plants.light_exposure_hours,
+            optimal_soil_ph_level: plants.optimal_soil_ph_level,
+            recommended_npk_ratio: plants.recommended_npk_ratio,
+            water_duration_days: plants.water_duration_days,
+            daily_water_requirement_liters_per_m2: plants.daily_water_requirement_liters_per_m2,
+            humidity_percentage: plants.humidity_percentage,
+            plant_description: plants.plant_description,
+        },
+        updatedAt: userPlant.updatedAt?.toLocaleString(),
+        createdAt: userPlant.createdAt?.toLocaleString(),
+    };
 };
 
-export const mapPlantsList = (plants: userPlant[]) => {
-    return plants.map((pcs) => plantObject(pcs));
+export const mapPlantsList = (userPlants: (Plants & UserPlant)[]) => {
+    return userPlants.map((userPlant) => plantObject(userPlant, userPlant));
 };

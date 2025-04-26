@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
 
 export const addPlantSchema = Yup.object({
-    plantName: Yup.string().required(),
+    plantID: Yup.string().required(),
     groundArea: Yup.number().required(),
 });
 

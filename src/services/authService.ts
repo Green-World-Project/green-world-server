@@ -1,11 +1,16 @@
 import jwt from 'jsonwebtoken';
 import 'dotenv/config'
-import { User } from '../models/user';
+import { Types } from "mongoose";
 
-export const generateTokenService = (user: User = {}) => {
+export interface UserPayload {
+    _id: Types.ObjectId;
+    email: String;
+}
+
+export const generateTokenService = (userPayload: UserPayload) => {
     if (!process.env.ACCESS_TOKEN_SECRET) {
         throw new Error("Signature is not defined");
     }
-    const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "7d" });
+    const token = jwt.sign(userPayload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "7d" });
     return { token };
 }

@@ -1,6 +1,7 @@
-import UserModel, { User } from '../models/user';
+import UserModel from '../models/user';
 import historyModel, { History } from '../models/history';
 import { mapHistoryList } from '../utils/history'
+import { Types } from "mongoose";
 import { v2 as cloudinary } from 'cloudinary';
 import path from 'path';
 
@@ -18,9 +19,8 @@ export interface multerFile {
     size: number;
 };
 
-export const getHistoryService = async (payload: User) => {
-    const { _id } = payload;
-    const checkUser = await UserModel.findById(_id);
+export const getHistoryService = async (userID: Types.ObjectId) => {
+    const checkUser = await UserModel.findById(userID);
     if (checkUser) {
         const result = await historyModel.find({ userID: checkUser._id }).sort({ createdAt: -1 });
         if (result && result.length > 0) return mapHistoryList(result as History[]);
@@ -28,9 +28,9 @@ export const getHistoryService = async (payload: User) => {
     } throw new Error("Unauthorized");
 };
 
-export const addHistoryService = async (user: User, file: multerFile, info: info) => {
+export const addHistoryService = async (userID: Types.ObjectId, file: multerFile, info: info) => {
     const result = await historyModel.create({
-        userID: user._id,
+        userID: userID._id,
         fileName: file.originalname,
         info: {
             name: info.name,
@@ -55,9 +55,8 @@ export const addHistoryService = async (user: User, file: multerFile, info: info
     };
 };
 
-export const deleteHistoryService = async (payload: User, id: String) => {
-    const { _id } = payload;
-    const checkUser = await UserModel.findById(_id);
+export const deleteHistoryService = async (userID: Types.ObjectId, id: String) => {
+    const checkUser = await UserModel.findById(userID);
     if (checkUser) {
         const result = await historyModel.findByIdAndDelete(id);
         if (!result) throw new Error("Photo not found in history");
