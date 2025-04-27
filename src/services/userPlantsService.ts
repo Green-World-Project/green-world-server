@@ -18,27 +18,32 @@ export interface Plants {
     plant_description: string
 };
 
-const getPlant = async (plantID: Types.ObjectId) => {
+const getPlants = async (plantID?: Types.ObjectId, plantsID?: Types.ObjectId[]) => {
     const database = getDatabase();
     if (!database) throw new Error("Database connection is undefined");
     const collection = database.collection('plants');
-    return await collection.findOne({ _id: new Types.ObjectId(plantID) });
-}
+    if (plantID) return await collection.findOne({ _id: new Types.ObjectId(plantID) });
+    else if (plantsID) return await collection.find({ _id: { $in: plantsID } }).toArray();
+    else return await collection.find().toArray();
+};
 
 export const getPlantService = async (userID: Types.ObjectId) => {
     const checkUser = await UserModel.findById(userID);
     if (checkUser) {
         const result: any = await userPlantsModel.find({ userID: checkUser._id }).sort({ createdAt: -1 });
-        if (result && result.length > 0) return mapPlantsList(result);
+        const plantsID = result.map((plant: UserPlant) => plant.plantID);
+        const plants = await getPlants(undefined, plantsID);
+        console.log(plants);
+        if (result && result.length > 0) return mapPlantsList(result, plants);
     } else throw new Error("Unauthorized");
-}
+};
 
 export const addPlantService = async (userID: Types.ObjectId, body: UserPlant) => {
     const checkUser = await UserModel.findById(userID);
     if (checkUser) {
         const plantID = body.plantID;
-        const plant = await getPlant(plantID);
-        if (!plant) throw new Error("Plant not Added");
+        const plant = await getPlants(plantID);
+        if (!plant || Array.isArray(plant)) throw new Error("Plant not Added");
         const result = await userPlantsModel.create({
             userID: userID,
             plantID: plantID,
@@ -49,16 +54,16 @@ export const addPlantService = async (userID: Types.ObjectId, body: UserPlant) =
         if (!result) throw new Error("Plant not added in care system");
         return "Added successfully";
     } else throw new Error("Unauthorized");
-}
+};
 
-export const updatePlantService = async (userID: Types.ObjectId, id: String, plant: UserPlant) => {
+export const updatePlantService = async (userID: Types.ObjectId, id: String, body: UserPlant) => {
     const checkUser = await UserModel.findById(userID);
     if (checkUser) {
-        const result = await userPlantsModel.findByIdAndUpdate(id, plant);
+        const result = await userPlantsModel.findByIdAndUpdate(id, body);
         if (!result) throw new Error("Plant not found in care system");
         return "Updated successfully";
     } else throw new Error("Unauthorized");
-}
+};
 
 export const deletePlantService = async (userID: Types.ObjectId, id: String) => {
     const checkUser = await UserModel.findById(userID);
@@ -67,7 +72,7 @@ export const deletePlantService = async (userID: Types.ObjectId, id: String) => 
         if (!result) throw new Error("Plant not found in care system");
         return "Deleted successfully";
     } else throw new Error("Unauthorized");
-}
+};
 
 // const PCSTimer = async () => {
 //     const plants = await userPlantsModel.find({});

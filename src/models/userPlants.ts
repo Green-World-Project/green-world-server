@@ -1,5 +1,4 @@
 import mongoose, { Types, Schema } from "mongoose";
-import { number } from "yup";
 
 export interface UserPlant {
     _id?: Types.ObjectId,
@@ -15,8 +14,8 @@ const userPlantsSchema = new mongoose.Schema({
     plantID: { type: Schema.Types.ObjectId, ref: "plants", required: true },
     waterNeed: { type: Number, required: true },
     groundArea: { type: Number, required: true },
-    updatedAt: { type: Date, default: Date.now },
-    createdAt: { type: Date, default: Date.now, immutable: true }
+    updatedAt: { type: Date, default: () => Date.now() },
+    createdAt: { type: Date, immutable: true, default: () => Date.now() },
 });
 
 export default mongoose.model(`UserPlants`, userPlantsSchema, `userPlants`);

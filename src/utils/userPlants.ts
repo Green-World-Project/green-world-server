@@ -1,7 +1,7 @@
 import { UserPlant } from '../models/userPlants';
 import { Plants } from '../services/userPlantsService'
 
-export const plantObject = (plants: Plants, userPlant: UserPlant) => {
+export const plantObject = (userPlant: UserPlant, plants: Plants) => {
     return {
         _id: userPlant._id,
         plant_name: plants.plant_name,
@@ -23,6 +23,7 @@ export const plantObject = (plants: Plants, userPlant: UserPlant) => {
     };
 };
 
-export const mapPlantsList = (userPlants: (Plants & UserPlant)[]) => {
+
+export const mapPlantsList = (userPlants: (UserPlant & Plants)[], plants: unknown) => {
     return userPlants.map((userPlant) => plantObject(userPlant, userPlant));
 };
