@@ -59,18 +59,22 @@ export const loginService = async (user: User) => {
     } else return { message: 'Invalid email or password' };
 };
 
-export const updateUserService = async (userID: Types.ObjectId, body: User) => {
-    const { password }: any = body;
-    if (body.password) {
-        try {
-            const hashedPassword = await bcrypt.hash(password, saltRounds);
-            body.password = hashedPassword;
-            const user = await UserModel.findByIdAndUpdate(userID, body, { new: true });
-            if (user) return { message: 'Updated successfully' };
-        } catch (error) {
-            return { message: 'Error hashing pasword:', error };
-        }
-    }
+export const updateUserInfoService = async (userID: Types.ObjectId, body: User) => {
+    if (body.password) throw new Error("Invalid field in update info");
     const user = await UserModel.findByIdAndUpdate(userID, body, { new: true });
     if (user) return { message: 'Updated successfully' };
+}
+
+export const updateUserPasswordService = async (userID: Types.ObjectId, body: User) => {
+    const { password }: any = body;
+    const keys = Object.keys(body)
+    if (keys.length > 1 || (keys.length === 1 && !body.password)) throw new Error("Invalid field in update info");
+    try {
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+        body.password = hashedPassword;
+        const user = await UserModel.findByIdAndUpdate(userID, body, { new: true });
+        if (user) return { message: 'Updated successfully' };
+    } catch (error) {
+        return { message: 'Error hashing pasword:', error };
+    }
 }
