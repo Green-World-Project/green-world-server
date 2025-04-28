@@ -1,6 +1,4 @@
-# Green World API Documentation
-
-### Plant Care System Documentation
+# plant Care System Documentation
 
 Base URLs:
 
@@ -12,7 +10,7 @@ Base URLs:
 
 ## GET Get Plant Care System
 
-GET /user/pcs
+GET /user/plants
 
 > Body Parameters
 
@@ -44,15 +42,15 @@ GET /user/pcs
 
 ## POST Post Plant Care System
 
-POST /user/pcs
+POST /user/plant
 
 > Body Parameters
 
 ```json
 {
-  "plantName": "string",
-  "wateringTime": 1,
-  "watering": true
+  "plantID": "string",
+  "groundArea": 0.1,
+  "isWatered": true
 }
 ```
 
@@ -67,7 +65,11 @@ POST /user/pcs
 > 200 Response
 
 ```json
-{}
+{
+  "plantID": "680a54f1a7482cbe22a559ca",
+  "groundArea": 5,
+  "isWatered": false
+}
 ```
 
 ### Responses
@@ -80,7 +82,7 @@ POST /user/pcs
 
 ## PUT Put Plant Care System
 
-PUT /user/pcs/{id}
+PUT /user/plant/{id}
 
 > Body Parameters
 
@@ -97,15 +99,16 @@ PUT /user/pcs/{id}
 |---|---|---|---|---|
 |id|path|string| yes |none|
 |body|body|object| no |none|
-|» wateringTime|body|integer| yes |none|
-|» watering|body|boolean| yes |none|
 
 > Response Examples
 
 > 200 Response
 
 ```json
-{}
+{
+  "wateringTime": 6,
+  "watering": true
+}
 ```
 
 ### Responses
@@ -118,7 +121,7 @@ PUT /user/pcs/{id}
 
 ## DELETE Delete Plant Care System
 
-DELETE /user/pcs/{id}
+DELETE /user/plant/{id}
 
 > Body Parameters
 
@@ -160,9 +163,9 @@ DELETE /user/pcs/{id}
 
 ```json
 {
-  "plantName": "string",
-  "wateringTime": 1,
-  "watering": true
+  "plantID": "string",
+  "groundArea": 0.1,
+  "isWatered": true
 }
 
 ```
@@ -171,7 +174,7 @@ DELETE /user/pcs/{id}
 
 |Name|Type|Required|Restrictions|Title|Description|
 |---|---|---|---|---|---|
-|plantName|string|true|none||none|
-|wateringTime|integer|true|none||none|
-|watering|boolean|true|none||none|
+|plantID|string|true|none||none|
+|groundArea|number|true|none||none|
+|isWatered|boolean|false|none||none|
 

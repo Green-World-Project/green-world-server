@@ -1,14 +1,14 @@
-# Green World API Documentation
-
-### User Documentation
+# User Documentation
 
 Base URLs:
 
 # Authentication
 
+- HTTP Authentication, scheme: bearer
+
 # User
 
-## POST Log In User
+## POST LogIn
 
 POST /login
 
@@ -30,6 +30,8 @@ POST /login
 |» password|body|string| yes |none|
 
 > Response Examples
+
+> 200 Response
 
 ```json
 {
@@ -60,7 +62,7 @@ POST /register
   "phoneNumber": "string",
   "age": 16,
   "gender": "string",
-  "password": "string"
+  "password": "pa$$word"
 }
 ```
 
@@ -68,16 +70,11 @@ POST /register
 
 |Name|Location|Type|Required|Description|
 |---|---|---|---|---|
-|body|body|object| no |none|
-|» firstName|body|string| yes |none|
-|» lastName|body|string| yes |none|
-|» email|body|string(email)| yes |none|
-|» phoneNumber|body|string| yes |none|
-|» age|body|integer| no |none|
-|» gender|body|string| no |none|
-|» password|body|string| yes |none|
+|body|body|[User Schema](#schemauser schema)| no |none|
 
 > Response Examples
+
+> 200 Response
 
 ```json
 {
@@ -100,35 +97,16 @@ POST /register
 
 ### Responses Data Schema
 
-## PUT Update User
+## GET Get User
 
-PUT /user/edit
-
-> Body Parameters
-
-```json
-{}
-```
-
-### Params
-
-|Name|Location|Type|Required|Description|
-|---|---|---|---|---|
-|body|body|object| no |none|
+GET /user
 
 > Response Examples
 
+> 200 Response
+
 ```json
-{
-  "firstName": "Monte",
-  "lastName": "Mueller",
-  "username": "Kathy Leannon",
-  "email": "Elvis_Abshire82@gmail.com",
-  "phoneNumber": "(568) 310-5989",
-  "age": 29,
-  "gender": "female",
-  "password": "LHY7hi000eNscDO"
-}
+{}
 ```
 
 ### Responses
@@ -139,27 +117,84 @@ PUT /user/edit
 
 ### Responses Data Schema
 
-HTTP Status Code **200**
+## PUT Put User
 
-|Name|Type|Required|Restrictions|Title|description|
-|---|---|---|---|---|---|
-|» firstName|string|true|none||none|
-|» lastName|string|true|none||none|
-|» username|string|false|none||none|
-|» email|string|false|none||none|
-|» phoneNumber|string|false|none||none|
-|» age|integer|false|none||none|
-|» gender|string|false|none||none|
-|» password|string|false|none||none|
+PUT /user/edit
+
+> Body Parameters
+
+```json
+{
+  "password": "hey#hey"
+}
+```
+
+### Params
+
+|Name|Location|Type|Required|Description|
+|---|---|---|---|---|
+|body|body|object| no |none|
+|» password|body|string| yes |none|
+
+> Response Examples
+
+> 200 Response
+
+```json
+{}
+```
+
+### Responses
+
+|HTTP Status Code |Meaning|Description|Data schema|
+|---|---|---|---|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|none|Inline|
+
+### Responses Data Schema
+
+## PUT Put User Copy
+
+PUT /user/edit/password
+
+> Body Parameters
+
+```json
+{
+  "password": "hey#hey"
+}
+```
+
+### Params
+
+|Name|Location|Type|Required|Description|
+|---|---|---|---|---|
+|body|body|object| no |none|
+|» password|body|string| yes |none|
+
+> Response Examples
+
+> 200 Response
+
+```json
+{}
+```
+
+### Responses
+
+|HTTP Status Code |Meaning|Description|Data schema|
+|---|---|---|---|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|none|Inline|
+
+### Responses Data Schema
 
 # Data Schema
 
-<h2 id="tocS_userSchema">userSchema</h2>
+<h2 id="tocS_User Schema">User Schema</h2>
 
-<a id="schemauserschema"></a>
-<a id="schema_userSchema"></a>
-<a id="tocSuserschema"></a>
-<a id="tocsuserschema"></a>
+<a id="schemauser schema"></a>
+<a id="schema_User Schema"></a>
+<a id="tocSuser schema"></a>
+<a id="tocsuser schema"></a>
 
 ```json
 {
@@ -169,7 +204,7 @@ HTTP Status Code **200**
   "phoneNumber": "string",
   "age": 16,
   "gender": "string",
-  "password": "string"
+  "password": "pa$$word"
 }
 
 ```
@@ -184,5 +219,5 @@ HTTP Status Code **200**
 |phoneNumber|string|true|none||none|
 |age|integer|false|none||none|
 |gender|string|false|none||none|
-|password|string|true|none||none|
+|password|string(password)|true|none||none|
 

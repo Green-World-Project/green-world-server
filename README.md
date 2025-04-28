@@ -2,8 +2,11 @@
 
 ### Documentations
 
-[User Documentation](user-documentation.md)
+[User Documentation](docs/user-documentation.md)
 
-[Plant Care System Documentation](plant-care-system-documentation.md)
+[Plant Care System Documentation](docs/plant-care-system-documentation.md)
 
-[Plant Identification Documentation](plant-identification-documentation.md)
+[Plant Identification Documentation](docs/plant-identification-documentation.md)
+
+[History Documentation](docs/history-documentation.md)
+

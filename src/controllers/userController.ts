@@ -4,9 +4,10 @@ import * as userSchema from '../schemas/userSchema';
 import { User } from '../models/user';
 
 export const getUserController = async (req: Request, res: Response) => {
-    const payload = req.user as User;
-    try {
-        const user = await userService.getUserService(payload);
+    const userPayload = req.userPayload;
+    if (!userPayload) res.status(400).json({ error: "User payload is missing" });
+    else try {
+        const user = await userService.getUserService(userPayload._id);
         res.status(200).json(user);
     } catch (error) {
         if (error instanceof Error)
@@ -36,12 +37,12 @@ export const loginController = async (req: Request, res: Response) => {
     }
 }
 
-
 export const updateUserInfoController = async (req: Request, res: Response) => {
-    const payload = req.user as User;
-    try {
+    const userPayload = req.userPayload;
+    if (!userPayload) res.status(400).json({ error: "User payload is missing" });
+    else try {
         await userSchema.updateUserInfoSchema.validate(req.body);
-        const user = await userService.updateUserInfoService(payload, req.body);
+        const user = await userService.updateUserInfoService(userPayload._id, req.body);
         res.status(201).json(user);
     } catch (error) {
         if (error instanceof Error)
@@ -49,12 +50,12 @@ export const updateUserInfoController = async (req: Request, res: Response) => {
     }
 }
 
-
 export const updateUserPasswordController = async (req: Request, res: Response) => {
-    const payload = req.user as User;
-    try {
+    const userPayload = req.userPayload;
+    if (!userPayload) res.status(400).json({ error: "User payload is missing" });
+    else try {
         await userSchema.updateUserPasswordSchema.validate(req.body);
-        const user = await userService.updateUserPasswordService(payload, req.body);
+        const user = await userService.updateUserPasswordService(userPayload._id, req.body);
         res.status(201).json(user);
     } catch (error) {
         if (error instanceof Error)

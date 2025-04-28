@@ -1,12 +1,12 @@
 import 'dotenv/config'
-import { User } from '../models/user';
+import { UserPayload } from '../services/authService';
 import { Request, Response, NextFunction } from "express";
 import jwt from 'jsonwebtoken';
 
 declare global {
     namespace Express {
         interface Request {
-            user?: User;
+            userPayload?: UserPayload;
         }
     }
 }
@@ -17,9 +17,9 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction): vo
     const token = authHeader && authHeader.split(' ')[1]
     if (!token) throw res.sendStatus(401);
 
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (error, user) => {
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (error, userPayload) => {
         if (error) return res.sendStatus(401);
-        req.user = user as User;
+        req.userPayload = userPayload as UserPayload;
         next();
     });
 }

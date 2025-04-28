@@ -17,8 +17,7 @@ const historySchema = new mongoose.Schema({
         name: { type: String, required: true },
         condition: { type: String, required: true }
     },
-    createdAt: { type: Date, default: Date.now }
-});
+}, { timestamps: true });
 
 historySchema.pre("save", function (next) {
     if (this.isNew) this.fileName = `${new mongoose.Types.ObjectId()}_${this.fileName}`;

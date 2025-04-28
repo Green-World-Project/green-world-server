@@ -2,12 +2,12 @@ import bcrypt from 'bcrypt';
 import UserModel, { User } from '../models/user';
 import { userObject } from '../utils/user'
 import { generateTokenService } from './authService'
+import { Types } from "mongoose";
 
 const saltRounds = 10;
 
-export const getUserService = async (payload: User) => {
-    const { _id }: any = payload;
-    const user = await UserModel.findById(_id);
+export const getUserService = async (userID: Types.ObjectId) => {
+    const user = await UserModel.findById(userID);
     if (user) return userObject(user);
     else throw new Error('Unauthorized');
 }
@@ -59,22 +59,20 @@ export const loginService = async (user: User) => {
     } else return { message: 'Invalid email or password' };
 };
 
-export const updateUserInfoService = async (payload: User, body: User) => {
-    const { _id }: any = payload;
+export const updateUserInfoService = async (userID: Types.ObjectId, body: User) => {
     if (body.password) throw new Error("Invalid field in update info");
-    const user = await UserModel.findByIdAndUpdate(_id, body, { new: true });
+    const user = await UserModel.findByIdAndUpdate(userID, body, { new: true });
     if (user) return { message: 'Updated successfully' };
 }
 
-export const updateUserPasswordService = async (payload: User, body: User) => {
-    const { _id }: any = payload;
+export const updateUserPasswordService = async (userID: Types.ObjectId, body: User) => {
     const { password }: any = body;
     const keys = Object.keys(body)
     if (keys.length > 1 || (keys.length === 1 && !body.password)) throw new Error("Invalid field in update info");
     try {
         const hashedPassword = await bcrypt.hash(password, saltRounds);
         body.password = hashedPassword;
-        const user = await UserModel.findByIdAndUpdate(_id, body, { new: true });
+        const user = await UserModel.findByIdAndUpdate(userID, body, { new: true });
         if (user) return { message: 'Updated successfully' };
     } catch (error) {
         return { message: 'Error hashing pasword:', error };
