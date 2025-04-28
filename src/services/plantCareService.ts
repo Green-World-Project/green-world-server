@@ -1,10 +1,10 @@
 import UserModel from '../models/user';
 import plantCareModel, { PlantCare } from '../models/plantCare';
-import { mapPlantsList } from '../utils/plantCare';
+import { mapPlantCareList } from '../utils/plantCare';
 import { getDatabase } from '../config/mongodb';
 import { Double, Types } from "mongoose";
 
-export interface Plants {
+export interface Plant {
     _id: Types.ObjectId,
     plant_name: string,
     ideal_soil_moisture_percentage: number,
@@ -25,15 +25,15 @@ export const getPlants = async (plantID: Types.ObjectId) => {
     return await collection.findOne({ _id: new Types.ObjectId(plantID) });
 };
 
-export const getPlantService = async (userID: Types.ObjectId) => {
+export const getPlantCareService = async (userID: Types.ObjectId) => {
     const checkUser = await UserModel.findById(userID);
     if (checkUser) {
         const result = await plantCareModel.find({ userID: checkUser._id }).sort({ createdAt: -1 });
-        if (result && result.length > 0) return mapPlantsList(result);
+        if (result && result.length > 0) return mapPlantCareList(result);
     } else throw new Error("Unauthorized");
 };
 
-export const createPlantService = async (userID: Types.ObjectId, body: PlantCare) => {
+export const createPlantCareService = async (userID: Types.ObjectId, body: PlantCare) => {
     const checkUser = await UserModel.findById(userID);
     if (checkUser) {
         const plantID = body.plantID;
@@ -51,7 +51,7 @@ export const createPlantService = async (userID: Types.ObjectId, body: PlantCare
     } else throw new Error("Unauthorized");
 };
 
-export const updatePlantService = async (userID: Types.ObjectId, id: String, body: PlantCare) => {
+export const updatePlantCareService = async (userID: Types.ObjectId, id: String, body: PlantCare) => {
     const checkUser = await UserModel.findById(userID);
     if (checkUser) {
         const result = await plantCareModel.findByIdAndUpdate(id, body);
@@ -60,7 +60,7 @@ export const updatePlantService = async (userID: Types.ObjectId, id: String, bod
     } else throw new Error("Unauthorized");
 };
 
-export const deletePlantService = async (userID: Types.ObjectId, id: String) => {
+export const deletePlantCareService = async (userID: Types.ObjectId, id: String) => {
     const checkUser = await UserModel.findById(userID);
     if (checkUser) {
         const result = await plantCareModel.findByIdAndDelete(id);

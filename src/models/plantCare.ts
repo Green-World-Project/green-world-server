@@ -18,4 +18,4 @@ const plantCareSchema = new mongoose.Schema({
     isWatered: { type: Boolean, default: false },
 }, { timestamps: true });
 
-export default mongoose.model(`PlantCareSystem`, plantCareSchema, `plant_care_system`);
+export default mongoose.model(`PlantCare`, plantCareSchema, `plant_care_system`);

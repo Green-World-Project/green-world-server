@@ -1,7 +1,7 @@
 import { PlantCare } from '../models/plantCare';
 import { getPlants } from '../services/plantCareService'
 
-export const plantObject = async (userPlant: PlantCare) => {
+export const plantCareObject = async (userPlant: PlantCare) => {
     const plants = await getPlants(userPlant.plantID);
     if (!plants) throw new Error(`Plants not found.`);
     return {
@@ -26,6 +26,6 @@ export const plantObject = async (userPlant: PlantCare) => {
     };
 };
 
-export const mapPlantsList = async (userPlants: PlantCare[]) => {
-    return await Promise.all(userPlants.map((userPlant) => plantObject(userPlant)));
+export const mapPlantCareList = async (userPlants: PlantCare[]) => {
+    return await Promise.all(userPlants.map((userPlant) => plantCareObject(userPlant)));
 };

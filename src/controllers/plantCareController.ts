@@ -6,7 +6,7 @@ export const getPlantController = async (req: Request, res: Response) => {
     const userPayload = req.userPayload;
     if (!userPayload) res.status(400).json({ error: "User payload is missing" });
     else try {
-        const response = await plantCareService.getPlantService(userPayload._id);
+        const response = await plantCareService.getPlantCareService(userPayload._id);
         res.status(201).json(response)
     } catch (error) {
         if (error instanceof Error)
@@ -14,12 +14,12 @@ export const getPlantController = async (req: Request, res: Response) => {
     }
 }
 
-export const createPlantController = async (req: Request, res: Response) => {
+export const createPlantCareController = async (req: Request, res: Response) => {
     const userPayload = req.userPayload;
     if (!userPayload) res.status(400).json({ error: "User payload is missing" });
     else try {
-        await plantCareSchema.createPlantSchema.validate(req.body)
-        const response = await plantCareService.createPlantService(userPayload._id, req.body);
+        await plantCareSchema.createPlantCareSchema.validate(req.body)
+        const response = await plantCareService.createPlantCareService(userPayload._id, req.body);
         res.status(201).json(response)
     } catch (error) {
         if (error instanceof Error)
@@ -27,12 +27,12 @@ export const createPlantController = async (req: Request, res: Response) => {
     }
 }
 
-export const updatePlantController = async (req: Request, res: Response) => {
+export const updatePlantCareController = async (req: Request, res: Response) => {
     const userPayload = req.userPayload;
     if (!userPayload) res.status(400).json({ error: "User payload is missing" });
     else try {
-        await plantCareSchema.updatePlantSchema.validate(req.body)
-        const response = await plantCareService.updatePlantService(userPayload._id, req.params.id, req.body);
+        await plantCareSchema.updatePlantCareSchema.validate(req.body)
+        const response = await plantCareService.updatePlantCareService(userPayload._id, req.params.id, req.body);
         res.status(201).json(response)
     } catch (error) {
         if (error instanceof Error)
@@ -40,11 +40,11 @@ export const updatePlantController = async (req: Request, res: Response) => {
     }
 }
 
-export const deletePlantController = async (req: Request, res: Response) => {
+export const deletePlantCareController = async (req: Request, res: Response) => {
     const userPayload = req.userPayload;
     if (!userPayload) res.status(400).json({ error: "User payload is missing" });
     else try {
-        const response = await plantCareService.deletePlantService(userPayload._id, req.params.id);
+        const response = await plantCareService.deletePlantCareService(userPayload._id, req.params.id);
         res.status(201).json(response)
     } catch (error) {
         if (error instanceof Error)
