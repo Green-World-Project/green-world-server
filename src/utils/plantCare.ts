@@ -1,19 +1,16 @@
-import { UserPlant } from '../models/userPlants';
-import { getPlants } from '../services/userPlantsService'
+import { PlantCare } from '../models/plantCare';
+import { getPlants } from '../services/plantCareService'
 
-export const plantObject = async (userPlant: UserPlant) => {
-
+export const plantObject = async (userPlant: PlantCare) => {
     const plants = await getPlants(userPlant.plantID);
-    if (!plants) {
-        throw new Error(`Plants not found.`);
-    }
+    if (!plants) throw new Error(`Plants not found.`);
     return {
         _id: userPlant._id,
         plant_name: plants.plant_name,
         waterNeed: userPlant.waterNeed,
         groundArea: userPlant.groundArea,
-        watering: userPlant.watering,
-        plantInfo: {
+        isWatered: userPlant.isWatered,
+        info: {
             ideal_soil_moisture_percentage: plants.ideal_soil_moisture_percentage,
             optimal_temperature_celsius: plants.optimal_temperature_celsius,
             light_exposure_hours: plants.light_exposure_hours,
@@ -24,11 +21,11 @@ export const plantObject = async (userPlant: UserPlant) => {
             humidity_percentage: plants.humidity_percentage,
             plant_description: plants.plant_description,
         },
-        updatedAt: userPlant.updatedAt?.toLocaleString(),
         createdAt: userPlant.createdAt?.toLocaleString(),
+        updatedAt: userPlant.updatedAt?.toLocaleString(),
     };
 };
 
-export const mapPlantsList = async (userPlants: UserPlant[]) => {
+export const mapPlantsList = async (userPlants: PlantCare[]) => {
     return await Promise.all(userPlants.map((userPlant) => plantObject(userPlant)));
 };

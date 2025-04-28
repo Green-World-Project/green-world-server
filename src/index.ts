@@ -2,7 +2,7 @@ import express from 'express';
 import 'dotenv/config';
 import { connectToDatabase } from './config/mongodb';
 import userRoutes from "./routes/userRoutes";
-import userPlantsRoutes from "./routes/userPlantsRoutes";
+import userPlantsRoutes from "./routes/plantCareRoutes";
 import plantIdentRoutes from "./routes/plantIdentRoutes";
 import historyRoutes from "./routes/historyRoutes";
 import cors from 'cors';

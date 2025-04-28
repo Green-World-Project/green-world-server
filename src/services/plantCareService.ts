@@ -1,6 +1,6 @@
 import UserModel from '../models/user';
-import userPlantsModel, { UserPlant } from '../models/userPlants';
-import { mapPlantsList } from '../utils/userPlants';
+import plantCareModel, { PlantCare } from '../models/plantCare';
+import { mapPlantsList } from '../utils/plantCare';
 import { getDatabase } from '../config/mongodb';
 import { Double, Types } from "mongoose";
 
@@ -28,33 +28,33 @@ export const getPlants = async (plantID: Types.ObjectId) => {
 export const getPlantService = async (userID: Types.ObjectId) => {
     const checkUser = await UserModel.findById(userID);
     if (checkUser) {
-        const result = await userPlantsModel.find({ userID: checkUser._id }).sort({ createdAt: -1 });
+        const result = await plantCareModel.find({ userID: checkUser._id }).sort({ createdAt: -1 });
         if (result && result.length > 0) return mapPlantsList(result);
     } else throw new Error("Unauthorized");
 };
 
-export const addPlantService = async (userID: Types.ObjectId, body: UserPlant) => {
+export const createPlantService = async (userID: Types.ObjectId, body: PlantCare) => {
     const checkUser = await UserModel.findById(userID);
     if (checkUser) {
         const plantID = body.plantID;
         const plant = await getPlants(plantID);
         if (!plant || Array.isArray(plant)) throw new Error("Plant not Added");
-        const result = await userPlantsModel.create({
+        const result = await plantCareModel.create({
             userID: userID,
             plantID: plantID,
             waterNeed: body.groundArea * plant.daily_water_requirement_liters_per_m2,
             groundArea: body.groundArea,
-            watering: body.watering,
+            isWatered: body.isWatered,
         });
         if (!result) throw new Error("Plant not added in care system");
         return "Added successfully";
     } else throw new Error("Unauthorized");
 };
 
-export const updatePlantService = async (userID: Types.ObjectId, id: String, body: UserPlant) => {
+export const updatePlantService = async (userID: Types.ObjectId, id: String, body: PlantCare) => {
     const checkUser = await UserModel.findById(userID);
     if (checkUser) {
-        const result = await userPlantsModel.findByIdAndUpdate(id, body);
+        const result = await plantCareModel.findByIdAndUpdate(id, body);
         if (!result) throw new Error("Plant not found in care system");
         return "Updated successfully";
     } else throw new Error("Unauthorized");
@@ -63,13 +63,13 @@ export const updatePlantService = async (userID: Types.ObjectId, id: String, bod
 export const deletePlantService = async (userID: Types.ObjectId, id: String) => {
     const checkUser = await UserModel.findById(userID);
     if (checkUser) {
-        const result = await userPlantsModel.findByIdAndDelete(id);
+        const result = await plantCareModel.findByIdAndDelete(id);
         if (!result) throw new Error("Plant not found in care system");
         return "Deleted successfully";
     } else throw new Error("Unauthorized");
 };
 
-// const PCSTimer = async () => {
+// const plantCareTimer = async () => {
 //     const plants = await userPlantsModel.find({});
 //     plants.forEach(plant => {
 //         // const wateringTime = (plant.wateringTime ?? 0) * 24 * 60 * 60 * 1000;
@@ -83,4 +83,4 @@ export const deletePlantService = async (userID: Types.ObjectId, id: String) => 
 //     }); plants
 // }
 
-// PCSTimer();
+// plantCareTimer();

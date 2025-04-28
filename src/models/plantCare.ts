@@ -1,21 +1,21 @@
 import mongoose, { Types, Schema } from "mongoose";
 
-export interface UserPlant {
+export interface PlantCare {
     _id?: Types.ObjectId,
     plantID: Types.ObjectId,
     waterNeed?: number,
     groundArea: number,
-    watering: Boolean,
-    updatedAt?: Date,
-    createdAt?: Date
+    isWatered: Boolean,
+    createdAt?: Date,
+    updatedAt?: Date
 };
 
-const userPlantsSchema = new mongoose.Schema({
+const plantCareSchema = new mongoose.Schema({
     userID: { type: Schema.Types.ObjectId, ref: "User", required: true },
     plantID: { type: Schema.Types.ObjectId, ref: "plants", required: true },
     waterNeed: { type: Number, required: true },
     groundArea: { type: Number, required: true },
-    watering: { type: Boolean, default: false },
+    isWatered: { type: Boolean, default: false },
 }, { timestamps: true });
 
-export default mongoose.model(`UserPlants`, userPlantsSchema, `userPlants`);
+export default mongoose.model(`PlantCareSystem`, plantCareSchema, `plant_care_system`);
