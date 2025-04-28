@@ -1,4 +1,4 @@
-import UserModel, { User } from '../models/user';
+import UserModel from '../models/user';
 import userPlantsModel, { UserPlant } from '../models/userPlants';
 import { mapPlantsList } from '../utils/userPlants';
 import { getDatabase } from '../config/mongodb';
@@ -18,23 +18,18 @@ export interface Plants {
     plant_description: string
 };
 
-const getPlants = async (plantID?: Types.ObjectId, plantsID?: Types.ObjectId[]) => {
+export const getPlants = async (plantID: Types.ObjectId) => {
     const database = getDatabase();
     if (!database) throw new Error("Database connection is undefined");
     const collection = database.collection('plants');
-    if (plantID) return await collection.findOne({ _id: new Types.ObjectId(plantID) });
-    else if (plantsID) return await collection.find({ _id: { $in: plantsID } }).toArray();
-    else return await collection.find().toArray();
+    return await collection.findOne({ _id: new Types.ObjectId(plantID) });
 };
 
 export const getPlantService = async (userID: Types.ObjectId) => {
     const checkUser = await UserModel.findById(userID);
     if (checkUser) {
-        const result: any = await userPlantsModel.find({ userID: checkUser._id }).sort({ createdAt: -1 });
-        const plantsID = result.map((plant: UserPlant) => plant.plantID);
-        const plants = await getPlants(undefined, plantsID);
-        console.log(plants);
-        if (result && result.length > 0) return mapPlantsList(result, plants);
+        const result = await userPlantsModel.find({ userID: checkUser._id }).sort({ createdAt: -1 });
+        if (result && result.length > 0) return mapPlantsList(result);
     } else throw new Error("Unauthorized");
 };
 
@@ -48,8 +43,8 @@ export const addPlantService = async (userID: Types.ObjectId, body: UserPlant) =
             userID: userID,
             plantID: plantID,
             waterNeed: body.groundArea * plant.daily_water_requirement_liters_per_m2,
-            groundArea: body.groundArea
-
+            groundArea: body.groundArea,
+            watering: body.watering,
         });
         if (!result) throw new Error("Plant not added in care system");
         return "Added successfully";

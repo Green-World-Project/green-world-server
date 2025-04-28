@@ -1,12 +1,18 @@
 import { UserPlant } from '../models/userPlants';
-import { Plants } from '../services/userPlantsService'
+import { getPlants } from '../services/userPlantsService'
 
-export const plantObject = (userPlant: UserPlant, plants: Plants) => {
+export const plantObject = async (userPlant: UserPlant) => {
+
+    const plants = await getPlants(userPlant.plantID);
+    if (!plants) {
+        throw new Error(`Plants not found.`);
+    }
     return {
         _id: userPlant._id,
         plant_name: plants.plant_name,
         waterNeed: userPlant.waterNeed,
         groundArea: userPlant.groundArea,
+        watering: userPlant.watering,
         plantInfo: {
             ideal_soil_moisture_percentage: plants.ideal_soil_moisture_percentage,
             optimal_temperature_celsius: plants.optimal_temperature_celsius,
@@ -23,7 +29,6 @@ export const plantObject = (userPlant: UserPlant, plants: Plants) => {
     };
 };
 
-
-export const mapPlantsList = (userPlants: (UserPlant & Plants)[], plants: unknown) => {
-    return userPlants.map((userPlant) => plantObject(userPlant, userPlant));
+export const mapPlantsList = async (userPlants: UserPlant[]) => {
+    return await Promise.all(userPlants.map((userPlant) => plantObject(userPlant)));
 };
