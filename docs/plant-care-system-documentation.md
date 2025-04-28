@@ -1,4 +1,4 @@
-# Plant Care System Documentation
+# plant Care System Documentation
 
 Base URLs:
 
@@ -48,10 +48,9 @@ POST /user/plant
 
 ```json
 {
-  "plantName": "string",
-  "liter": 0.1,
-  "wateringTime": 1,
-  "watering": true
+  "plantID": "string",
+  "groundArea": 0.1,
+  "isWatered": true
 }
 ```
 
@@ -66,7 +65,11 @@ POST /user/plant
 > 200 Response
 
 ```json
-{}
+{
+  "plantID": "680a54f1a7482cbe22a559ca",
+  "groundArea": 5,
+  "isWatered": false
+}
 ```
 
 ### Responses
@@ -96,15 +99,16 @@ PUT /user/plant/{id}
 |---|---|---|---|---|
 |id|path|string| yes |none|
 |body|body|object| no |none|
-|» wateringTime|body|integer| yes |none|
-|» watering|body|boolean| yes |none|
 
 > Response Examples
 
 > 200 Response
 
 ```json
-{}
+{
+  "wateringTime": 6,
+  "watering": true
+}
 ```
 
 ### Responses
@@ -159,10 +163,9 @@ DELETE /user/plant/{id}
 
 ```json
 {
-  "plantName": "string",
-  "liter": 0.1,
-  "wateringTime": 1,
-  "watering": true
+  "plantID": "string",
+  "groundArea": 0.1,
+  "isWatered": true
 }
 
 ```
@@ -171,8 +174,7 @@ DELETE /user/plant/{id}
 
 |Name|Type|Required|Restrictions|Title|Description|
 |---|---|---|---|---|---|
-|plantName|string|true|none||none|
-|liter|number(float)|true|none||none|
-|wateringTime|integer|true|none||none|
-|watering|boolean|true|none||none|
+|plantID|string|true|none||none|
+|groundArea|number|true|none||none|
+|isWatered|boolean|false|none||none|
 
