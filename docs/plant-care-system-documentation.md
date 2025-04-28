@@ -42,7 +42,7 @@ GET /user/plants
 
 ## POST Post Plant Care System
 
-POST /user/plant
+POST /user/plant-care
 
 > Body Parameters
 
@@ -82,7 +82,7 @@ POST /user/plant
 
 ## PUT Put Plant Care System
 
-PUT /user/plant/{id}
+PUT /user/plant-care/{id}
 
 > Body Parameters
 
@@ -121,7 +121,7 @@ PUT /user/plant/{id}
 
 ## DELETE Delete Plant Care System
 
-DELETE /user/plant/{id}
+DELETE /user/plant-care/{id}
 
 > Body Parameters
 
