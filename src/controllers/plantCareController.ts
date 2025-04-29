@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import * as plantCareService from '../services/plantCareService'
 import * as plantCareSchema from '../schemas/plantCareSchema';
 
-export const getPlantController = async (req: Request, res: Response) => {
+export const getPlantCareController = async (req: Request, res: Response) => {
     const userPayload = req.userPayload;
     if (!userPayload) res.status(400).json({ error: "User payload is missing" });
     else try {

@@ -1,29 +1,8 @@
 import UserModel from '../models/user';
 import plantCareModel, { PlantCare } from '../models/plantCare';
 import { mapPlantCareList } from '../utils/plantCare';
-import { getDatabase } from '../config/mongodb';
-import { Double, Types } from "mongoose";
-
-export interface Plant {
-    _id: Types.ObjectId,
-    plant_name: string,
-    ideal_soil_moisture_percentage: number,
-    optimal_temperature_celsius: Double,
-    light_exposure_hours: number,
-    optimal_soil_ph_level: Double,
-    recommended_npk_ratio: string,
-    water_duration_days: number,
-    daily_water_requirement_liters_per_m2: number,
-    humidity_percentage: number,
-    plant_description: string
-};
-
-export const getPlants = async (plantID: Types.ObjectId) => {
-    const database = getDatabase();
-    if (!database) throw new Error("Database connection is undefined");
-    const collection = database.collection('plants');
-    return await collection.findOne({ _id: new Types.ObjectId(plantID) });
-};
+import { getPlantsService } from './plantsService';
+import { Types } from "mongoose";
 
 export const getPlantCareService = async (userID: Types.ObjectId) => {
     const checkUser = await UserModel.findById(userID);
@@ -37,7 +16,7 @@ export const createPlantCareService = async (userID: Types.ObjectId, body: Plant
     const checkUser = await UserModel.findById(userID);
     if (checkUser) {
         const plantID = body.plantID;
-        const plant = await getPlants(plantID);
+        const plant = await getPlantsService(plantID);
         if (!plant || Array.isArray(plant)) throw new Error("Plant not Added");
         const result = await plantCareModel.create({
             userID: userID,
@@ -84,3 +63,13 @@ export const deletePlantCareService = async (userID: Types.ObjectId, id: String)
 // }
 
 // plantCareTimer();
+
+
+/*
+   Hi {name},
+   Your {plant_name} could really use a little water right now!  
+   A quick sprinkle and it'll be good to go.
+   
+   Thanks for keeping your plants happy!  
+   - green world
+*/

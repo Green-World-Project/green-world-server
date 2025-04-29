@@ -1,9 +1,9 @@
 import { PlantCare } from '../models/plantCare';
-import { getPlants } from '../services/plantCareService'
+import { getPlantsService } from '../services/plantsService'
 
 export const plantCareObject = async (userPlant: PlantCare) => {
-    const plants = await getPlants(userPlant.plantID);
-    if (!plants) throw new Error(`Plants not found.`);
+    const plants = await getPlantsService(userPlant.plantID);
+    if (!plants || Array.isArray(plants)) throw new Error(`Plant not found or multiple plants returned.`);
     return {
         _id: userPlant._id,
         plant_name: plants.plant_name,
@@ -22,7 +22,6 @@ export const plantCareObject = async (userPlant: PlantCare) => {
             plant_description: plants.plant_description,
         },
         createdAt: userPlant.createdAt?.toLocaleString(),
-        updatedAt: userPlant.updatedAt?.toLocaleString(),
     };
 };
 
