@@ -4,6 +4,6 @@ import * as plantsController from '../controllers/plantsController';
 
 const router = express.Router();
 
-router.get("/api/plants", verifyToken, plantsController.getPlantController);
+router.get("/api/plants/options", verifyToken, plantsController.getPlantController);
 
 export default router;
