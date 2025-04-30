@@ -21,7 +21,7 @@ export const plantCareObject = (userPlant: PlantCare, plants: Plant[]) => {
             humidity_percentage: plant.humidity_percentage,
             plant_description: plant.plant_description,
         },
-        createdAt: userPlant.createdAt?.toLocaleString(),
+        updatedAt: userPlant.updatedAt?.toLocaleString(),
     };
 };
 
