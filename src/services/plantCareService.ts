@@ -1,14 +1,15 @@
 import UserModel from '../models/user';
 import plantCareModel, { PlantCare } from '../models/plantCare';
 import { mapPlantCareList } from '../utils/plantCare';
-import { getPlantsService } from './plantsService';
+import { getPlants, getPlantsService, Plant } from './plantsService';
 import { Types } from "mongoose";
 
 export const getPlantCareService = async (userID: Types.ObjectId) => {
     const checkUser = await UserModel.findById(userID);
     if (checkUser) {
         const result = await plantCareModel.find({ userID: checkUser._id }).sort({ createdAt: -1 });
-        if (result && result.length > 0) return mapPlantCareList(result);
+        const plants = await getPlants() as Plant[];
+        if (result && result.length > 0 && Array.isArray(plants)) return mapPlantCareList(result, plants);
     } else throw new Error("Unauthorized");
 };
 
@@ -16,7 +17,7 @@ export const createPlantCareService = async (userID: Types.ObjectId, body: Plant
     const checkUser = await UserModel.findById(userID);
     if (checkUser) {
         const plantID = body.plantID;
-        const plant = await getPlantsService(plantID);
+        const plant = await getPlants(plantID);
         if (!plant || Array.isArray(plant)) throw new Error("Plant not Added");
         const result = await plantCareModel.create({
             userID: userID,

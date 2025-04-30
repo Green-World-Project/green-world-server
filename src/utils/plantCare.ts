@@ -1,30 +1,30 @@
 import { PlantCare } from '../models/plantCare';
-import { getPlantsService } from '../services/plantsService'
+import { Plant } from '../services/plantsService'
 
-export const plantCareObject = async (userPlant: PlantCare) => {
-    const plants = await getPlantsService(userPlant.plantID);
-    if (!plants || Array.isArray(plants)) throw new Error(`Plant not found or multiple plants returned.`);
+export const plantCareObject = (userPlant: PlantCare, plants: Plant[]) => {
+    const plant = plants.find((plant) => userPlant.plantID.toString() == plant._id.toString());
+    if (!plant) throw new Error(`Plant not found or multiple plants returned.`);
     return {
         _id: userPlant._id,
-        plant_name: plants.plant_name,
+        plant_name: plant.plant_name,
         waterNeed: userPlant.waterNeed,
         groundArea: userPlant.groundArea,
         isWatered: userPlant.isWatered,
         info: {
-            ideal_soil_moisture_percentage: plants.ideal_soil_moisture_percentage,
-            optimal_temperature_celsius: plants.optimal_temperature_celsius,
-            light_exposure_hours: plants.light_exposure_hours,
-            optimal_soil_ph_level: plants.optimal_soil_ph_level,
-            recommended_npk_ratio: plants.recommended_npk_ratio,
-            water_duration_days: plants.water_duration_days,
-            daily_water_requirement_liters_per_m2: plants.daily_water_requirement_liters_per_m2,
-            humidity_percentage: plants.humidity_percentage,
-            plant_description: plants.plant_description,
+            ideal_soil_moisture_percentage: plant.ideal_soil_moisture_percentage,
+            optimal_temperature_celsius: plant.optimal_temperature_celsius,
+            light_exposure_hours: plant.light_exposure_hours,
+            optimal_soil_ph_level: plant.optimal_soil_ph_level,
+            recommended_npk_ratio: plant.recommended_npk_ratio,
+            water_duration_days: plant.water_duration_days,
+            daily_water_requirement_liters_per_m2: plant.daily_water_requirement_liters_per_m2,
+            humidity_percentage: plant.humidity_percentage,
+            plant_description: plant.plant_description,
         },
         createdAt: userPlant.createdAt?.toLocaleString(),
     };
 };
 
-export const mapPlantCareList = async (userPlants: PlantCare[]) => {
-    return await Promise.all(userPlants.map((userPlant) => plantCareObject(userPlant)));
+export const mapPlantCareList = (userPlants: PlantCare[], plants: Plant[]) => {
+    return userPlants.map((userPlant) => plantCareObject(userPlant, plants));
 };
