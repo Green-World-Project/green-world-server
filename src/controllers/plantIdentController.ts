@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import * as plantIdentService from '../services/plantIdentService';
-import { User } from '../models/user';
 
 export const plantIdentController = async (req: Request, res: Response) => {
     const userPayload = req.userPayload;

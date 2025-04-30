@@ -1,7 +1,7 @@
 import UserModel from '../models/user';
 import plantCareModel, { PlantCare } from '../models/plantCare';
 import { mapPlantCareList } from '../utils/plantCare';
-import { getPlants, getPlantsService, Plant } from './plantsService';
+import { getPlants, Plant } from './plantsService';
 import { Types } from "mongoose";
 
 export const getPlantCareService = async (userID: Types.ObjectId) => {
@@ -34,7 +34,7 @@ export const createPlantCareService = async (userID: Types.ObjectId, body: Plant
 export const updatePlantCareService = async (userID: Types.ObjectId, id: String, body: PlantCare) => {
     const checkUser = await UserModel.findById(userID);
     if (checkUser) {
-        const result = await plantCareModel.findByIdAndUpdate(id, body);
+        const result = await plantCareModel.findOneAndUpdate({ _id: id }, body);
         if (!result) throw new Error("Plant not found in care system");
         return "Updated successfully";
     } else throw new Error("Unauthorized");
