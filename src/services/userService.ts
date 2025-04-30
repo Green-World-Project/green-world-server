@@ -1,26 +1,25 @@
 import bcrypt from 'bcrypt';
 import UserModel, { User } from '../models/user';
-import { userObject } from '../utils/user'
+import { userObject } from '../utils/user';
 import { generateTokenService } from './authService'
 import { Types } from "mongoose";
 
 const saltRounds = 10;
 
+interface ChangePassword {
+    currentPassword: string,
+    newPassword: string
+};
+
 export const getUserService = async (userID: Types.ObjectId) => {
     const user = await UserModel.findById(userID);
     if (user) return userObject(user);
     else throw new Error('Unauthorized');
-}
+};
 
 export const registerService = async (user: User) => {
     const { email, phoneNumber, password }: any = user;
-    const checkUser = await UserModel.findOne({
-        $or: [
-            { email },
-            { phoneNumber }
-        ]
-    });
-
+    const checkUser = await UserModel.findOne({ $or: [{ email }, { phoneNumber }] });
     if (checkUser) {
         let existsMessage: User = {};
         if (email === checkUser.email) existsMessage.email = 'Email already exists';
@@ -31,15 +30,15 @@ export const registerService = async (user: User) => {
         const hashedPassword = await bcrypt.hash(password, saltRounds);
         user.password = hashedPassword;
         const result = await UserModel.create(user);
-        const payload = {
+        const userPayload = {
             _id: result._id,
             email: result.email
         }
-        if (result) return generateTokenService(payload);
+        if (result) return generateTokenService(userPayload);
     } catch (error) {
         return { message: 'Error hashing pasword:', error };
     }
-}
+};
 
 export const loginService = async (user: User) => {
     const { email, password }: any = user;
@@ -47,11 +46,11 @@ export const loginService = async (user: User) => {
     if (checkUser) {
         try {
             const result = await bcrypt.compare(password, checkUser.password);
-            const payload = {
+            const userPayload = {
                 _id: checkUser._id,
                 email: checkUser.email
             }
-            if (result) return generateTokenService(payload);
+            if (result) return generateTokenService(userPayload);
             else return { message: 'Invalid email or password' };
         } catch (error) {
             return { message: `Error comparing passwords:  `, error };
@@ -63,18 +62,19 @@ export const updateUserInfoService = async (userID: Types.ObjectId, body: User) 
     if (body.password) throw new Error("Invalid field in update info");
     const user = await UserModel.findByIdAndUpdate(userID, body, { new: true });
     if (user) return { message: 'Updated successfully' };
-}
+};
 
-export const updateUserPasswordService = async (userID: Types.ObjectId, body: User) => {
-    const { password }: any = body;
-    const keys = Object.keys(body)
-    if (keys.length > 1 || (keys.length === 1 && !body.password)) throw new Error("Invalid field in update info");
+export const updateUserPasswordService = async (userID: Types.ObjectId, body: ChangePassword) => {
     try {
-        const hashedPassword = await bcrypt.hash(password, saltRounds);
-        body.password = hashedPassword;
-        const user = await UserModel.findByIdAndUpdate(userID, body, { new: true });
-        if (user) return { message: 'Updated successfully' };
-    } catch (error) {
-        return { message: 'Error hashing pasword:', error };
+        const user = await UserModel.findById(userID);
+        if (!user) throw new Error('Unauthorized');
+        const isMatch = await bcrypt.compare(body.currentPassword, user.password);
+        if (!isMatch) throw new Error('Wrong current password');
+        const hashedPassword = await bcrypt.hash(body.newPassword, saltRounds);
+        const result = await UserModel.updateOne({ _id: userID }, { $set: { password: hashedPassword } });
+        if (result.modifiedCount > 0) return { message: 'Password updated successfully' };
+        else return { message: 'Password update failed or no change detected' };
+    } catch (error: any) {
+        return { message: error.message || 'Error updating password' };
     }
-}
+};

@@ -3,7 +3,7 @@ import * as Yup from 'yup';
 export const loginSchema = Yup.object({
     email: Yup.string().email().required(),
     password: Yup.string().required()
-})
+});
 
 export const signupSchema = Yup.object({
     firstName: Yup.string().required(),
@@ -13,7 +13,7 @@ export const signupSchema = Yup.object({
     age: Yup.number().min(16).max(100),
     gender: Yup.string(),
     password: Yup.string().required()
-})
+});
 
 export const updateUserInfoSchema = Yup.object({
     firstName: Yup.string(),
@@ -22,8 +22,9 @@ export const updateUserInfoSchema = Yup.object({
     phoneNumber: Yup.string(),
     age: Yup.number().min(16).max(100),
     gender: Yup.string(),
-}).noUnknown(true, 'Invalid field in update info');
+});
 
 export const updateUserPasswordSchema = Yup.object({
-    password: Yup.string().required()
-})
+    currentPassword: Yup.string().required(),
+    newPassword: Yup.string().required()
+});
