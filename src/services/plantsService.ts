@@ -16,13 +16,18 @@ export interface Plant {
     plant_description: string
 };
 
-export const getPlantsService = async (plantID?: Types.ObjectId) => {
+export const getPlants = async (plantID?: Types.ObjectId) => {
     const database = getDatabase();
     if (!database) throw new Error("Database connection is undefined");
     const collection = database.collection('plants');
     if (plantID) return await collection.findOne({ _id: new Types.ObjectId(plantID) });
-    else {
-        const result = await collection.find({}).toArray()
-        return mapPlantsList(result as Plant[]);
-    }
+    else return await collection.find({}).toArray()
+};
+
+export const getPlantsService = async () => {
+    const database = getDatabase();
+    if (!database) throw new Error("Database connection is undefined");
+    const collection = database.collection('plants');
+    const result = await collection.find({}).toArray()
+    return mapPlantsList(result as Plant[]);
 };
