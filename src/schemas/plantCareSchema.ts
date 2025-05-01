@@ -7,7 +7,7 @@ export const createPlantCareSchema = Yup.object({
 });
 
 export const updatePlantCareSchema = Yup.object({
-    plantName: Yup.string(),
+    plantID: Yup.string().required(),
     groundArea: Yup.number(),
     isWatered: Yup.boolean(),
 });

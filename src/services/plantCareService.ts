@@ -3,6 +3,7 @@ import plantCareModel, { PlantCare } from '../models/plantCare';
 import { mapPlantCareList } from '../utils/plantCare';
 import { getPlants, Plant } from './plantsService';
 import { Types } from "mongoose";
+// import nodemailer from 'nodemailer';
 
 export const getPlantCareService = async (userID: Types.ObjectId) => {
     const checkUser = await UserModel.findById(userID);
@@ -15,10 +16,10 @@ export const getPlantCareService = async (userID: Types.ObjectId) => {
 
 export const createPlantCareService = async (userID: Types.ObjectId, body: PlantCare) => {
     const checkUser = await UserModel.findById(userID);
+    const plantID = body.plantID;
+    const plant = await getPlants(plantID);
+    if (!plant || Array.isArray(plant)) throw new Error("Plants not found");
     if (checkUser) {
-        const plantID = body.plantID;
-        const plant = await getPlants(plantID);
-        if (!plant || Array.isArray(plant)) throw new Error("Plant not Added");
         const result = await plantCareModel.create({
             userID: userID,
             plantID: plantID,
@@ -26,16 +27,27 @@ export const createPlantCareService = async (userID: Types.ObjectId, body: Plant
             groundArea: body.groundArea,
             isWatered: body.isWatered,
         });
-        if (!result) throw new Error("Plant not added in care system");
+        if (!result) throw new Error("Plant not added");
         return "Added successfully";
     } else throw new Error("Unauthorized");
 };
 
 export const updatePlantCareService = async (userID: Types.ObjectId, id: String, body: PlantCare) => {
     const checkUser = await UserModel.findById(userID);
+    const plantID = body.plantID;
+    const plant = await getPlants(plantID);
+    if (!plant || Array.isArray(plant)) throw new Error("Plants not found");
     if (checkUser) {
-        const result = await plantCareModel.findOneAndUpdate({ _id: id }, body);
-        if (!result) throw new Error("Plant not found in care system");
+        const waterNeed = body.groundArea
+            ? body.groundArea * plant.daily_water_requirement_liters_per_m2
+            : body.waterNeed;
+        const result = await plantCareModel.updateOne({ _id: id }, {
+            plantID: plantID,
+            waterNeed: waterNeed,
+            groundArea: body.groundArea,
+            isWatered: body.isWatered,
+        });
+        if (result.modifiedCount !== 1) throw new Error("Plant not updated");
         return "Updated successfully";
     } else throw new Error("Unauthorized");
 };
@@ -49,28 +61,66 @@ export const deletePlantCareService = async (userID: Types.ObjectId, id: String)
     } else throw new Error("Unauthorized");
 };
 
-// const plantCareTimer = async () => {
-//     const plants = await userPlantsModel.find({});
-//     plants.forEach(plant => {
-//         // const wateringTime = (plant.wateringTime ?? 0) * 24 * 60 * 60 * 1000;
-//         const wateringTime = (plant.wateringTime ?? 0) * 60 * 1000;
-//         setInterval(async () => {
-//             await userPlantsModel.updateOne(
-//                 { _id: plant._id },
-//                 { $set: { watering: false } }
-//             );
-//         }, wateringTime);
-//     }); plants
-// }
+const plantCareNotification = async () => {
+    const plantCares = await plantCareModel.find();
+    const plants = await getPlants();
+    const now = Date.now();
+    if (!plants || !Array.isArray(plants)) throw new Error("Plants not found");
+    for (const care of plantCares) {
+        const plant = (plants as Plant[]).find((plant: Plant) => plant._id.toString() === care.plantID.toString());
+        if (!plant) continue;
+        const nextWateringTime = new Date(care.lastWateredAt).getTime() + plant.water_duration_days * 24 * 60 * 60 * 1000;
+        if (now >= nextWateringTime && care.isWatered) {
+            await plantCareModel.updateOne(
+                { _id: care._id },
+                { $set: { isWatered: false } }
+            );
+            console.log(`PlantCare ${care._id} marked as not watered.`);
+        }
+    }
+};
 
-// plantCareTimer();
+plantCareNotification();
 
 
-/*
-   Hi {name},
-   Your {plant_name} could really use a little water right now!  
-   A quick sprinkle and it'll be good to go.
-   
-   Thanks for keeping your plants happy!  
-   - green world
-*/
+
+// const transporter = nodemailer.createTransport({
+//     service: 'gmail',
+//     auth: {
+//         user: 'your_email@gmail.com',
+//         pass: 'your_app_password', // Not your Gmail password — see note below
+//     },
+// });
+
+// export const sendEmail = async (to: string, subject: string, text: string) => {
+//     const mailOptions = {
+//         from: 'your_email@gmail.com',
+//         to,
+//         subject,
+//         text,
+//     };
+
+//     try {
+//         const info = await transporter.sendMail(mailOptions);
+//         console.log('Email sent:', info.response);
+//     } catch (error) {
+//         console.error('Error sending email:', error);
+//     }
+// };
+
+
+// const subject = `Time to Water Your 🌿 ${plant_name}!`
+
+
+
+// const text = `
+//  Hi ${name},
+
+// We just wanted to give you a gentle reminder — your plant **${plant_name}** is feeling a little thirsty! 💧
+
+// A quick watering will have it back to thriving in no time.  
+// Thanks for being such a great plant parent!
+
+// Stay green,  
+// — The Green World Team 🌱
+// `
