@@ -17,14 +17,20 @@ const plantCareSchema = new mongoose.Schema({
     waterNeed: { type: Number, required: true },
     groundArea: { type: Number, required: true },
     isWatered: { type: Boolean, default: false },
-    lastWateredAt: { type: Date, default: Date.now },
+    lastWateredAt: { type: Date, default: null },
 }, { timestamps: true });
 
-// plantCareSchema.pre('findOneAndUpdate', function (next) {
-//     if (this.isWatered == true) {
-//         this.lastWateredAt = new Date();
-//     }
-//     next();
-// });
+plantCareSchema.pre('save', function (next) {
+    if (this.isWatered === true)
+        this.lastWateredAt = new Date();
+    next();
+});
+
+plantCareSchema.pre('updateOne', function (next) {
+    const update = this.getUpdate();
+    if (update && (update as mongoose.UpdateQuery<PlantCare>).isWatered === true)
+        (update as mongoose.UpdateQuery<PlantCare>).lastWateredAt = new Date();
+    next();
+});
 
 export default mongoose.model(`PlantCare`, plantCareSchema, `plant_care_system`);
