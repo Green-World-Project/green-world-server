@@ -3,7 +3,7 @@ import plantCareModel, { PlantCare } from '../models/plantCare';
 import { mapPlantCareList } from '../utils/plantCare';
 import { getPlants, Plant } from './plantsService';
 import { Types } from "mongoose";
-// import nodemailer from 'nodemailer';
+import { sendEmail } from '../utils/email';
 
 export const getPlantCareService = async (userID: Types.ObjectId) => {
     const checkUser = await UserModel.findById(userID);
@@ -75,52 +75,10 @@ const plantCareNotification = async () => {
                 { _id: care._id },
                 { $set: { isWatered: false } }
             );
+            // sendEmail(checkUser.email, subject, text);
             console.log(`PlantCare ${care._id} marked as not watered.`);
         }
     }
 };
 
 plantCareNotification();
-
-
-
-// const transporter = nodemailer.createTransport({
-//     service: 'gmail',
-//     auth: {
-//         user: 'your_email@gmail.com',
-//         pass: 'your_app_password', // Not your Gmail password — see note below
-//     },
-// });
-
-// export const sendEmail = async (to: string, subject: string, text: string) => {
-//     const mailOptions = {
-//         from: 'your_email@gmail.com',
-//         to,
-//         subject,
-//         text,
-//     };
-
-//     try {
-//         const info = await transporter.sendMail(mailOptions);
-//         console.log('Email sent:', info.response);
-//     } catch (error) {
-//         console.error('Error sending email:', error);
-//     }
-// };
-
-
-// const subject = `Time to Water Your 🌿 ${plant_name}!`
-
-
-
-// const text = `
-//  Hi ${name},
-
-// We just wanted to give you a gentle reminder — your plant **${plant_name}** is feeling a little thirsty! 💧
-
-// A quick watering will have it back to thriving in no time.  
-// Thanks for being such a great plant parent!
-
-// Stay green,  
-// — The Green World Team 🌱
-// `
