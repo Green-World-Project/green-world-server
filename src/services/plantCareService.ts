@@ -1,6 +1,6 @@
 import UserModel from '../models/user';
 import plantCareModel, { PlantCare } from '../models/plantCare';
-import { mapPlantCareList } from '../utils/plantCare';
+import { plantCareObject, mapPlantCareList } from '../utils/plantCare';
 import { getPlants, Plant } from './plantsService';
 import { Types } from "mongoose";
 import { sendEmail } from '../utils/email';
@@ -28,7 +28,10 @@ export const createPlantCareService = async (userID: Types.ObjectId, body: Plant
             isWatered: body.isWatered,
         });
         if (!result) throw new Error("Plant not added");
-        return "Added successfully";
+        return {
+            message: "Added successfully",
+            result: plantCareObject(result, plant as Plant),
+        };
     } else throw new Error("Unauthorized");
 };
 
@@ -41,14 +44,17 @@ export const updatePlantCareService = async (userID: Types.ObjectId, id: String,
         const waterNeed = body.groundArea
             ? body.groundArea * plant.daily_water_requirement_liters_per_m2
             : body.waterNeed;
-        const result = await plantCareModel.updateOne({ _id: id }, {
+        const result = await plantCareModel.findByIdAndUpdate(id, {
             plantID: plantID,
             waterNeed: waterNeed,
             groundArea: body.groundArea,
             isWatered: body.isWatered,
         });
-        if (result.modifiedCount !== 1) throw new Error("Plant not updated");
-        return "Updated successfully";
+        if (!result) throw new Error("Plant not updated");
+        return {
+            message: "Updated successfully",
+            result: plantCareObject(result, plant as Plant),
+        };
     } else throw new Error("Unauthorized");
 };
 

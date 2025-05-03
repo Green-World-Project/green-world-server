@@ -4,8 +4,6 @@ import axios from 'axios';
 import FormData from 'form-data';
 import { Types } from "mongoose";
 
-export let statusCode: number;
-
 export const plantIdentService = async (userID: Types.ObjectId, file: multerFile) => {
     const checkUser = await UserModel.findById(userID);
     if (checkUser) {
@@ -16,16 +14,9 @@ export const plantIdentService = async (userID: Types.ObjectId, file: multerFile
                 headers: { ...formData.getHeaders() }
             });
             addHistoryService(checkUser._id, file, response.data);
-            statusCode = 201;
             return response.data;
         } catch (error) {
-            if (axios.isAxiosError(error) && error.response?.status === 422) {
-                statusCode = 422;
-                throw new Error("Unable to identify please send a photo of a plant")
-            } else {
-                statusCode = 500;
-                throw new Error("Plant identification failed");
-            }
+            if (axios.isAxiosError(error) && error.response?.status === 422) throw new Error("Unable to identify please send a photo of a plant")
         }
     } else throw new Error("Unauthorized");
 };

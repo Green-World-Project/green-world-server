@@ -1,9 +1,15 @@
 import { PlantCare } from '../models/plantCare';
 import { Plant } from '../services/plantsService'
 
-export const plantCareObject = (userPlant: PlantCare, plants: Plant[]) => {
-    const plant = plants.find((plant) => userPlant.plantID.toString() == plant._id.toString());
-    if (!plant) throw new Error(`Plant not found or multiple plants returned.`);
+export const plantCareObject = (userPlant: PlantCare, plants: (Plant | Plant[])) => {
+    if (!plants) throw new Error(`Plants not found`);
+
+    const plant: Plant = Array.isArray(plants)
+        ? (plants.find((plant) => userPlant.plantID.toString() == plant._id.toString()) as Plant)
+        : (plants as Plant);
+
+    if (!plant) throw new Error(`Plant not found`);
+
     return {
         _id: userPlant._id,
         plant_name: plant.plant_name,

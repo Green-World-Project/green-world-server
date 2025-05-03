@@ -7,9 +7,9 @@ export const plantIdentController = async (req: Request, res: Response) => {
     else if (!req.file) res.status(400).json({ error: "Photo data is required" });
     else try {
         const response = await plantIdentService.plantIdentService(userPayload._id, req.file);
-        res.status(plantIdentService.statusCode).json(response)
+        res.status(200).json(response)
     }
     catch (error) {
-        if (error instanceof Error) res.status(plantIdentService.statusCode).json({ error: error.message })
+        if (error instanceof Error) res.status(500).json({ error: error.message })
     };
 };
