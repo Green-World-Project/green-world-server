@@ -1,9 +1,9 @@
 import UserModel from '../models/user';
 import plantCareModel, { PlantCare } from '../models/plantCare';
-import { mapPlantCareList } from '../utils/plantCare';
+import { plantCareObject, mapPlantCareList } from '../utils/plantCare';
 import { getPlants, Plant } from './plantsService';
 import { Types } from "mongoose";
-// import nodemailer from 'nodemailer';
+import { sendEmail } from '../utils/email';
 
 export const getPlantCareService = async (userID: Types.ObjectId) => {
     const checkUser = await UserModel.findById(userID);
@@ -28,7 +28,10 @@ export const createPlantCareService = async (userID: Types.ObjectId, body: Plant
             isWatered: body.isWatered,
         });
         if (!result) throw new Error("Plant not added");
-        return "Added successfully";
+        return {
+            message: "Added successfully",
+            result: plantCareObject(result, plant as Plant),
+        };
     } else throw new Error("Unauthorized");
 };
 
@@ -41,14 +44,17 @@ export const updatePlantCareService = async (userID: Types.ObjectId, id: String,
         const waterNeed = body.groundArea
             ? body.groundArea * plant.daily_water_requirement_liters_per_m2
             : body.waterNeed;
-        const result = await plantCareModel.updateOne({ _id: id }, {
+        const result = await plantCareModel.findByIdAndUpdate(id, {
             plantID: plantID,
             waterNeed: waterNeed,
             groundArea: body.groundArea,
             isWatered: body.isWatered,
         });
-        if (result.modifiedCount !== 1) throw new Error("Plant not updated");
-        return "Updated successfully";
+        if (!result) throw new Error("Plant not updated");
+        return {
+            message: "Updated successfully",
+            result: plantCareObject(result, plant as Plant),
+        };
     } else throw new Error("Unauthorized");
 };
 
@@ -75,52 +81,10 @@ const plantCareNotification = async () => {
                 { _id: care._id },
                 { $set: { isWatered: false } }
             );
+            // sendEmail(checkUser.email, subject, text);
             console.log(`PlantCare ${care._id} marked as not watered.`);
         }
     }
 };
 
 plantCareNotification();
-
-
-
-// const transporter = nodemailer.createTransport({
-//     service: 'gmail',
-//     auth: {
-//         user: 'your_email@gmail.com',
-//         pass: 'your_app_password', // Not your Gmail password — see note below
-//     },
-// });
-
-// export const sendEmail = async (to: string, subject: string, text: string) => {
-//     const mailOptions = {
-//         from: 'your_email@gmail.com',
-//         to,
-//         subject,
-//         text,
-//     };
-
-//     try {
-//         const info = await transporter.sendMail(mailOptions);
-//         console.log('Email sent:', info.response);
-//     } catch (error) {
-//         console.error('Error sending email:', error);
-//     }
-// };
-
-
-// const subject = `Time to Water Your 🌿 ${plant_name}!`
-
-
-
-// const text = `
-//  Hi ${name},
-
-// We just wanted to give you a gentle reminder — your plant **${plant_name}** is feeling a little thirsty! 💧
-
-// A quick watering will have it back to thriving in no time.  
-// Thanks for being such a great plant parent!
-
-// Stay green,  
-// — The Green World Team 🌱
-// `

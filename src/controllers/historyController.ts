@@ -6,10 +6,11 @@ export const getHistoryController = async (req: Request, res: Response) => {
     if (!userPayload) res.status(400).json({ error: "User payload is missing" });
     else try {
         const response = await historyService.getHistoryService(userPayload._id);
-        res.status(201).json(response);
+        res.status(200).json(response);
     }
     catch (error) {
-        if (error instanceof Error) res.status(500).json({ error: error.message });
+        if (error instanceof Error)
+            res.status(400).json({ error: error.message });
     }
 };
 
@@ -18,9 +19,9 @@ export const deleteHistoryController = async (req: Request, res: Response) => {
     if (!userPayload) res.status(400).json({ error: "User payload is missing" });
     else try {
         const response = await historyService.deleteHistoryService(userPayload._id, req.params.id);
-        res.status(201).json(response);
+        res.status(200).json(response);
     } catch (error) {
         if (error instanceof Error)
-            res.status(500).json({ error: error.message });
+            res.status(400).json({ error: error.message });
     }
 };
