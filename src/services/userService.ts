@@ -75,6 +75,6 @@ export const updateUserPasswordService = async (userID: Types.ObjectId, body: Ch
         if (result.modifiedCount > 0) return { message: 'Password updated successfully' };
         else return { message: 'Password update failed or no change detected' };
     } catch (error: any) {
-        return { message: error.message || 'Error updating password' };
+        throw new Error('Error updating password');
     }
 };
