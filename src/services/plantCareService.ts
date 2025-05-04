@@ -49,7 +49,7 @@ export const updatePlantCareService = async (userID: Types.ObjectId, id: String,
             waterNeed: waterNeed,
             groundArea: body.groundArea,
             isWatered: body.isWatered,
-        });
+        }, { new: true });
         if (!result) throw new Error("Plant not updated");
         return {
             message: "Updated successfully",
