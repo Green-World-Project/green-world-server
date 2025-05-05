@@ -4,6 +4,7 @@ import { mapHistoryList } from '../utils/history'
 import { Types } from "mongoose";
 import { v2 as cloudinary } from 'cloudinary';
 import path from 'path';
+import { BadRequestError, InternalServerError, NotFoundError, UnauthorizedError } from '../utils/errorClasses';
 
 interface info {
     name: string,
@@ -24,8 +25,8 @@ export const getHistoryService = async (userID: Types.ObjectId) => {
     if (checkUser) {
         const result = await historyModel.find({ userID: checkUser._id }).sort({ createdAt: -1 });
         if (result && result.length > 0) return mapHistoryList(result as History[]);
-        else throw new Error("History not Found");
-    } throw new Error("Unauthorized");
+        else throw new NotFoundError("History not Found");
+    } throw new UnauthorizedError("Unauthorized");
 };
 
 export const addHistoryService = async (userID: Types.ObjectId, file: multerFile, info: info) => {
@@ -37,7 +38,7 @@ export const addHistoryService = async (userID: Types.ObjectId, file: multerFile
             condition: info.condition
         }
     });
-    if (!result) throw new Error("Photo not added in history");
+    if (!result) throw new InternalServerError("Photo not added in history");
 
     const publicID = path.basename(result.fileName, path.extname(file.originalname));
 
@@ -51,7 +52,7 @@ export const addHistoryService = async (userID: Types.ObjectId, file: multerFile
         )
         uploadStream.end(file.buffer);
     } catch (error) {
-        throw new Error("Upload Error:" + error);
+        throw new BadRequestError("Upload Error:" + error);
     };
 };
 
@@ -59,15 +60,15 @@ export const deleteHistoryService = async (userID: Types.ObjectId, id: String) =
     const checkUser = await UserModel.findById(userID);
     if (checkUser) {
         const result = await historyModel.findByIdAndDelete(id);
-        if (!result) throw new Error("Photo not found in history");
+        if (!result) throw new InternalServerError("Photo not found in history");
 
         const publicID = path.basename(result.fileName, path.extname(result.fileName));
 
         try {
             await cloudinary.uploader.destroy(`history/${publicID}`);
         } catch (error) {
-            throw new Error("Error deleting file from Cloudinary: " + error);
+            throw new InternalServerError("Error deleting file from Cloudinary: " + error);
         }
         return "Deleted successfully";
-    } else throw new Error("Unauthorized");
+    } else throw new UnauthorizedError("Unauthorized");
 };
