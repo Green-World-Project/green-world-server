@@ -4,6 +4,7 @@ import { plantCareObject, mapPlantCareList } from '../utils/plantCare';
 import { getPlants, Plant } from './plantsService';
 import { Types } from "mongoose";
 import { sendEmail } from '../utils/email';
+import { generateWaterReminderEmail } from '../utils/emailTemplates';
 
 export const getPlantCareService = async (userID: Types.ObjectId) => {
     const checkUser = await UserModel.findById(userID);
@@ -68,23 +69,27 @@ export const deletePlantCareService = async (userID: Types.ObjectId, id: String)
 };
 
 const plantCareNotification = async () => {
-    const plantCares = await plantCareModel.find();
+    const plantCareList = await plantCareModel.find();
     const plants = await getPlants();
     const now = Date.now();
     if (!plants || !Array.isArray(plants)) throw new Error("Plants not found");
-    for (const care of plantCares) {
-        const plant = (plants as Plant[]).find((plant: Plant) => plant._id.toString() === care.plantID.toString());
+    for (const plantCare of plantCareList) {
+        const plant = (plants as Plant[]).find((plant: Plant) => plant._id.toString() === plantCare.plantID.toString());
         if (!plant) continue;
-        const nextWateringTime = new Date(care.lastWateredAt).getTime() + plant.water_duration_days * 24 * 60 * 60 * 1000;
-        if (now >= nextWateringTime && care.isWatered) {
+        const nextWateringTime = new Date(plantCare.lastWateredAt).getTime() + plant.water_duration_days * 24 * 60 * 60 * 1000;
+        if (now >= nextWateringTime && plantCare.isWatered) {
             await plantCareModel.updateOne(
-                { _id: care._id },
+                { _id: plantCare._id },
                 { $set: { isWatered: false } }
             );
-            // sendEmail(checkUser.email, subject, text);
-            console.log(`PlantCare ${care._id} marked as not watered.`);
-        }
-    }
+            const user = await UserModel.findById(plantCare.userID);
+            if (user) {
+                const emailContent = generateWaterReminderEmail(plant.plant_name, user.email);
+                await sendEmail(user.email, emailContent.subject, emailContent.text);
+                console.log(`PlantCare ${plantCare._id} marked as not watered.`);
+            };
+        };
+    };
 };
 
 plantCareNotification();
