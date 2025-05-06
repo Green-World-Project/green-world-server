@@ -3,7 +3,6 @@ import UserModel, { User } from '../models/user';
 import { userObject } from '../utils/user';
 import { generateTokenService } from './authService'
 import { Types } from "mongoose";
-import { BadRequestError, ConflictError, UnauthorizedError, ValidationError, InternalServerError } from '../utils/errorClasses';
 
 const saltRounds = 10;
 
@@ -15,7 +14,7 @@ interface ChangePassword {
 export const getUserService = async (userID: Types.ObjectId) => {
     const user = await UserModel.findById(userID);
     if (user) return userObject(user);
-    else throw new UnauthorizedError('Unauthorized');
+    else throw new Error('Unauthorized');
 };
 
 export const registerService = async (user: User) => {
@@ -25,7 +24,7 @@ export const registerService = async (user: User) => {
         let existsMessage: User = {};
         if (email === checkUser.email) existsMessage.email = 'Email already exists';
         if (phoneNumber === checkUser.phoneNumber) existsMessage.phoneNumber = 'Phone number already exists';
-        throw new ConflictError(Object.values(existsMessage).join(' & '));
+        throw new Error(Object.values(existsMessage).join(' & '));
     }
     try {
         const hashedPassword = await bcrypt.hash(password, saltRounds);
@@ -37,7 +36,7 @@ export const registerService = async (user: User) => {
         }
         if (result) return generateTokenService(userPayload);
     } catch (error) {
-        throw new InternalServerError('Error hashing pasword');
+        return { message: 'Error hashing pasword:', error };
     }
 };
 
@@ -56,11 +55,11 @@ export const loginService = async (user: User) => {
         } catch (error) {
             return { message: `Error comparing passwords:  `, error };
         }
-    } else throw new ValidationError('Invalid email or password');
+    } else return { message: 'Invalid email or password' };
 };
 
 export const updateUserInfoService = async (userID: Types.ObjectId, body: User) => {
-    if (body.password) throw new BadRequestError("Invalid field in update info");
+    if (body.password) throw new Error("Invalid field in update info");
     const user = await UserModel.findByIdAndUpdate(userID, body, { new: true });
     if (user) return { message: 'Updated successfully' };
 };
@@ -68,14 +67,14 @@ export const updateUserInfoService = async (userID: Types.ObjectId, body: User) 
 export const updateUserPasswordService = async (userID: Types.ObjectId, body: ChangePassword) => {
     try {
         const user = await UserModel.findById(userID);
-        if (!user) throw new UnauthorizedError('Unauthorized');
+        if (!user) throw new Error('Unauthorized');
         const isMatch = await bcrypt.compare(body.currentPassword, user.password);
-        if (!isMatch) throw new ValidationError('Wrong current password');
+        if (!isMatch) throw new Error('Wrong current password');
         const hashedPassword = await bcrypt.hash(body.newPassword, saltRounds);
         const result = await UserModel.updateOne({ _id: userID }, { $set: { password: hashedPassword } });
         if (result.modifiedCount > 0) return { message: 'Password updated successfully' };
         else return { message: 'Password update failed or no change detected' };
     } catch (error: any) {
-        throw new InternalServerError('Error updating password');
+        throw new Error('Error updating password');
     }
 };
