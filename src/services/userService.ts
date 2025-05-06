@@ -54,7 +54,7 @@ export const loginService = async (user: User) => {
             if (result) return generateTokenService(userPayload);
             else throw new ValidationError('Invalid email or password');
         } catch (error) {
-            throw new InternalServerError('Error comparing passwords');
+            throw new ValidationError('Error comparing passwords');
         }
     } else throw new UnauthorizedError('Unauthorized');
 };

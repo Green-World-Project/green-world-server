@@ -21,7 +21,6 @@ connectToDatabase();
 
 app.use(userRoutes);
 app.use(plantCareRoutes);
-app.use(errorHandler);
 app.use(plantsRoutes);
 app.use(plantIdentRoutes);
 app.use(historyRoutes);
