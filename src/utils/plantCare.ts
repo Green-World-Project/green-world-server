@@ -15,11 +15,13 @@ export const plantCareObject = (userPlant: PlantCare, plants: (Plant | Plant[]))
         plant_name: plant.plant_name,
         waterNeed: userPlant.waterNeed,
         groundArea: userPlant.groundArea,
-        nextWateringDate: !userPlant.isWatered ? new Date().toLocaleString() :
+        nextWateringDate: userPlant.isWatered ? new Date(
             new Date(
-                new Date(userPlant.lastWateredAt || Date.now()).getTime() +
-                (Number(plant.water_duration_days) || 0) * 24 * 60 * 60 * 1000
-            ).toLocaleString(),
+                userPlant.lastWateredAt || Date.now()
+            ).getTime() + (Number(plant.water_duration_days) || 0) * 24 * 60 * 60 * 1000
+        ).toLocaleString()
+
+            : new Date().toLocaleString(),
         isWatered: userPlant.isWatered,
         info: {
             ideal_soil_moisture_percentage: plant.ideal_soil_moisture_percentage,
