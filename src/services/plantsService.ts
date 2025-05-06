@@ -1,7 +1,7 @@
 import { getDatabase } from '../config/mongodb';
 import { mapPlantsList } from '../utils/plants';
 import { Double, Types } from "mongoose";
-import { InternalServerError } from '../utils/ApiError';
+import { InternalServerError, NotFoundError } from '../utils/ApiError';
 
 export interface Plant {
     _id: Types.ObjectId,
@@ -22,13 +22,14 @@ export const getPlants = async (plantID?: Types.ObjectId) => {
     if (!database) throw new InternalServerError("Database connection is undefined");
     const collection = database.collection('plants');
     if (plantID) return await collection.findOne({ _id: new Types.ObjectId(plantID) });
-    else return await collection.find({}).toArray()
+    else return await collection.find().toArray()
 };
 
 export const getPlantsService = async () => {
     const database = getDatabase();
     if (!database) throw new InternalServerError("Database connection is undefined");
     const collection = database.collection('plants');
-    const result = await collection.find({}).toArray()
+    const result = await collection.find().toArray();
+    if (!result) throw new NotFoundError('Plants not found');
     return mapPlantsList(result as Plant[]);
 };

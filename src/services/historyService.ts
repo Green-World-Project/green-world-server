@@ -38,10 +38,8 @@ export const addHistoryService = async (userID: Types.ObjectId, file: multerFile
             condition: info.condition
         }
     });
-    if (!result) throw new InternalServerError("Photo not added in history");
-
+    if (!result) throw new BadRequestError("Photo not added in history");
     const publicID = path.basename(result.fileName, path.extname(file.originalname));
-
     try {
         const uploadStream = cloudinary.uploader.upload_stream(
             {
@@ -52,23 +50,20 @@ export const addHistoryService = async (userID: Types.ObjectId, file: multerFile
         )
         uploadStream.end(file.buffer);
     } catch (error) {
-        throw new BadRequestError("Upload Error:" + error);
+        throw new BadRequestError('Upload Error');
     };
 };
 
 export const deleteHistoryService = async (userID: Types.ObjectId, id: String) => {
     const checkUser = await UserModel.findById(userID);
-    if (checkUser) {
-        const result = await historyModel.findByIdAndDelete(id);
-        if (!result) throw new InternalServerError("Photo not found in history");
-
-        const publicID = path.basename(result.fileName, path.extname(result.fileName));
-
-        try {
-            await cloudinary.uploader.destroy(`history/${publicID}`);
-        } catch (error) {
-            throw new InternalServerError("Error deleting file from Cloudinary: " + error);
-        }
+    if (!checkUser) throw new UnauthorizedError("Unauthorized");
+    const result = await historyModel.findByIdAndDelete(id);
+    if (!result) throw new InternalServerError("Photo not found in history");
+    const publicID = path.basename(result.fileName, path.extname(result.fileName));
+    try {
+        await cloudinary.uploader.destroy(`history/${publicID}`);
         return "Deleted successfully";
-    } else throw new UnauthorizedError("Unauthorized");
+    } catch (error) {
+        throw new BadRequestError('Error deleting file');
+    }
 };
