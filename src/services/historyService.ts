@@ -4,7 +4,7 @@ import { mapHistoryList } from '../utils/history'
 import { Types } from "mongoose";
 import { v2 as cloudinary } from 'cloudinary';
 import path from 'path';
-import { BadRequestError, InternalServerError, NotFoundError, UnauthorizedError } from '../utils/errorClasses';
+import { BadRequestError, InternalServerError, NotFoundError, UnauthorizedError } from '../utils/ApiError';
 
 interface info {
     name: string,

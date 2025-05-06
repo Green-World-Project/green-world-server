@@ -7,6 +7,8 @@ import plantsRoutes from "./routes/plantsRoutes";
 import plantIdentRoutes from "./routes/plantIdentRoutes";
 import historyRoutes from "./routes/historyRoutes";
 import cors from 'cors';
+import 'express-async-errors';
+import { errorHandler } from './middlewares/errorHandler';
 
 const app = express();
 app.use(cors());
@@ -19,8 +21,11 @@ connectToDatabase();
 
 app.use(userRoutes);
 app.use(plantCareRoutes);
+app.use(errorHandler);
 app.use(plantsRoutes);
 app.use(plantIdentRoutes);
 app.use(historyRoutes);
+
+app.use(errorHandler);
 
 app.listen(port, () => console.log(`Server is running on port ${port}...`));

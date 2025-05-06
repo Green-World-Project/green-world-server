@@ -1,7 +1,7 @@
 import { getDatabase } from '../config/mongodb';
 import { mapPlantsList } from '../utils/plants';
 import { Double, Types } from "mongoose";
-import { InternalServerError } from '../utils/errorClasses';
+import { InternalServerError } from '../utils/ApiError';
 
 export interface Plant {
     _id: Types.ObjectId,

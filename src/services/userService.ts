@@ -3,7 +3,7 @@ import UserModel, { User } from '../models/user';
 import { userObject } from '../utils/user';
 import { generateTokenService } from './authService'
 import { Types } from "mongoose";
-import { BadRequestError, ConflictError, UnauthorizedError, ValidationError, InternalServerError } from '../utils/errorClasses';
+import { BadRequestError, ConflictError, UnauthorizedError, ValidationError, InternalServerError } from '../utils/ApiError';
 
 const saltRounds = 10;
 
@@ -52,11 +52,11 @@ export const loginService = async (user: User) => {
                 email: checkUser.email
             }
             if (result) return generateTokenService(userPayload);
-            else return { message: 'Invalid email or password' };
+            else throw new ValidationError('Invalid email or password');
         } catch (error) {
-            return { message: `Error comparing passwords:  `, error };
+            throw new InternalServerError('Error comparing passwords');
         }
-    } else throw new ValidationError('Invalid email or password');
+    } else throw new UnauthorizedError('Unauthorized');
 };
 
 export const updateUserInfoService = async (userID: Types.ObjectId, body: User) => {

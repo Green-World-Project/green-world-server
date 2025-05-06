@@ -3,7 +3,7 @@ import { addHistoryService, multerFile } from '../services/historyService';
 import axios from 'axios';
 import FormData from 'form-data';
 import { Types } from "mongoose";
-import { UnauthorizedError, ValidationError } from '../utils/errorClasses';
+import { UnauthorizedError, ValidationError } from '../utils/ApiError';
 
 export const plantIdentService = async (userID: Types.ObjectId, file: multerFile) => {
     const checkUser = await UserModel.findById(userID);
