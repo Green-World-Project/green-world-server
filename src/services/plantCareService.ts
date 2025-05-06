@@ -5,7 +5,7 @@ import { getPlants, Plant } from './plantsService';
 import { Types } from "mongoose";
 import { sendEmail } from '../utils/email';
 import { generateWaterReminderEmail } from '../utils/emailTemplates';
-import { BadRequestError, InternalServerError, NotFoundError, UnauthorizedError } from '../utils/ApiError';
+import { BadRequestError, NotFoundError, UnauthorizedError } from '../utils/ApiError';
 
 export const getPlantCareService = async (userID: Types.ObjectId) => {
     const checkUser = await UserModel.findById(userID);
