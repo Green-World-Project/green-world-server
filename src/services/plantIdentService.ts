@@ -3,7 +3,6 @@ import { addHistoryService, multerFile } from '../services/historyService';
 import axios from 'axios';
 import FormData from 'form-data';
 import { Types } from "mongoose";
-import { UnauthorizedError, ValidationError } from '../utils/errorClasses';
 
 export const plantIdentService = async (userID: Types.ObjectId, file: multerFile) => {
     const checkUser = await UserModel.findById(userID);
@@ -17,7 +16,7 @@ export const plantIdentService = async (userID: Types.ObjectId, file: multerFile
             addHistoryService(checkUser._id, file, response.data);
             return response.data;
         } catch (error) {
-            if (axios.isAxiosError(error) && error.response?.status === 422) throw new ValidationError("Unable to identify please send a photo of a plant")
+            if (axios.isAxiosError(error) && error.response?.status === 422) throw new Error("Unable to identify please send a photo of a plant")
         }
-    } else throw new UnauthorizedError("Unauthorized");
+    } else throw new Error("Unauthorized");
 };
