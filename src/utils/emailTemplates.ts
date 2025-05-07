@@ -9,7 +9,7 @@ export const generateWaterReminderEmail = (plantName: string, userName: string) 
     Thanks for being such a great plant parent!
     
     Stay green,  
-    — The Green World Team 🌱
+    — The Green World 🌱
       `;
   return { subject, text };
 };
