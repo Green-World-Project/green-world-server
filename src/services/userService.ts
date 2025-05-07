@@ -13,8 +13,8 @@ interface ChangePassword {
 };
 
 export const getUserService = async (userID: Types.ObjectId) => {
-    const user = await UserModel.findById(userID);
-    if (user) return userObject(user);
+    const checkUser = await UserModel.findById(userID);
+    if (checkUser) return userObject(checkUser);
     else throw new UnauthorizedError('Unauthorized');
 };
 
@@ -62,9 +62,9 @@ export const updateUserInfoService = async (userID: Types.ObjectId, body: User) 
 };
 
 export const updateUserPasswordService = async (userID: Types.ObjectId, body: ChangePassword) => {
-    const user = await UserModel.findById(userID);
-    if (!user) throw new UnauthorizedError('Unauthorized');
-    const isMatch = await bcrypt.compare(body.currentPassword, user.password);
+    const checkUser = await UserModel.findById(userID);
+    if (!checkUser) throw new UnauthorizedError('Unauthorized');
+    const isMatch = await bcrypt.compare(body.currentPassword, checkUser.password);
     if (!isMatch) throw new ValidationError('Wrong current password');
     const hashedPassword = await bcrypt.hash(body.newPassword, saltRounds);
     const result = await UserModel.updateOne({ _id: userID }, { $set: { password: hashedPassword } });

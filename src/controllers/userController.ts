@@ -2,14 +2,13 @@ import { Request, Response } from "express";
 import * as userService from '../services/userService';
 import * as userSchema from '../schemas/userSchema';
 import { asyncHandler } from '../utils/asyncHandler';
+import { BadRequestError } from '../utils/ApiError';
 
 export const getUserController = asyncHandler(async (req: Request, res: Response) => {
     const userPayload = req.userPayload;
-    if (!userPayload) res.status(400).json({ error: "User payload is missing" });
-    else {
-        const user = await userService.getUserService(userPayload._id);
-        res.status(200).json(user);
-    };
+    if (!userPayload) throw new BadRequestError("User payload is missing");
+    const user = await userService.getUserService(userPayload._id);
+    res.status(200).json(user);
 });
 
 export const registerController = asyncHandler(async (req: Request, res: Response) => {
@@ -26,20 +25,16 @@ export const loginController = asyncHandler(async (req: Request, res: Response) 
 
 export const updateUserInfoController = asyncHandler(async (req: Request, res: Response) => {
     const userPayload = req.userPayload;
-    if (!userPayload) res.status(400).json({ error: "User payload is missing" });
-    else {
-        await userSchema.updateUserInfoSchema.validate(req.body);
-        const user = await userService.updateUserInfoService(userPayload._id, req.body);
-        res.status(200).json(user);
-    };
+    if (!userPayload) throw new BadRequestError("User payload is missing");
+    await userSchema.updateUserInfoSchema.validate(req.body);
+    const user = await userService.updateUserInfoService(userPayload._id, req.body);
+    res.status(200).json(user);
 });
 
 export const updateUserPasswordController = asyncHandler(async (req: Request, res: Response) => {
     const userPayload = req.userPayload;
-    if (!userPayload) res.status(400).json({ error: "User payload is missing" });
-    else {
-        await userSchema.updateUserPasswordSchema.validate(req.body);
-        const user = await userService.updateUserPasswordService(userPayload._id, req.body);
-        res.status(200).json(user);
-    };
+    if (!userPayload) throw new BadRequestError("User payload is missing");
+    await userSchema.updateUserPasswordSchema.validate(req.body);
+    const user = await userService.updateUserPasswordService(userPayload._id, req.body);
+    res.status(200).json(user);
 });

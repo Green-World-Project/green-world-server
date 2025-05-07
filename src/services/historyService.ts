@@ -4,7 +4,7 @@ import { mapHistoryList } from '../utils/history'
 import { Types } from "mongoose";
 import { v2 as cloudinary } from 'cloudinary';
 import path from 'path';
-import { BadRequestError, InternalServerError, NotFoundError, UnauthorizedError } from '../utils/ApiError';
+import { BadRequestError, InternalServerError, UnauthorizedError } from '../utils/ApiError';
 
 interface info {
     name: string,
@@ -22,14 +22,14 @@ export interface multerFile {
 
 export const getHistoryService = async (userID: Types.ObjectId) => {
     const checkUser = await UserModel.findById(userID);
-    if (checkUser) {
-        const result = await historyModel.find({ userID: checkUser._id }).sort({ createdAt: -1 });
-        if (result && result.length > 0) return mapHistoryList(result as History[]);
-        else throw new NotFoundError("History not Found");
-    } throw new UnauthorizedError("Unauthorized");
+    if (!checkUser) throw new UnauthorizedError("Unauthorized");
+    const result = await historyModel.find({ userID: checkUser._id }).sort({ createdAt: -1 });
+    if (result) return mapHistoryList(result as History[]);
 };
 
 export const addHistoryService = async (userID: Types.ObjectId, file: multerFile, info: info) => {
+    const checkUser = await UserModel.findById(userID);
+    if (!checkUser) throw new UnauthorizedError("Unauthorized");
     const result = await historyModel.create({
         userID: userID._id,
         fileName: file.originalname,

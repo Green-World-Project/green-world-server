@@ -82,7 +82,7 @@ const plantCareTimer = async () => {
             );
             const user = await UserModel.findById(plantCare.userID);
             if (user) {
-                const emailContent = generateWaterReminderEmail(plant.plant_name, user.email);
+                const emailContent = generateWaterReminderEmail(plant.plant_name, `${user.firstName} ${user.lastName}`);
                 await sendEmail(user.email, emailContent.subject, emailContent.text);
                 console.log(`PlantCare ${plantCare._id} marked as not watered.`);
             };
