@@ -1,17 +1,18 @@
 import { Request, Response } from "express";
 import * as plantCareService from '../services/plantCareService'
 import * as plantCareSchema from '../schemas/plantCareSchema';
+import { asyncHandler } from '../utils/asyncHandler';
 
-export const getPlantCareController = async (req: Request, res: Response) => {
+export const getPlantCareController = asyncHandler(async (req: Request, res: Response) => {
     const userPayload = req.userPayload;
     if (!userPayload) res.status(400).json({ error: "User payload is missing" });
     else {
         const response = await plantCareService.getPlantCareService(userPayload._id);
         res.status(200).json(response);
     };
-};
+});
 
-export const createPlantCareController = async (req: Request, res: Response) => {
+export const createPlantCareController = asyncHandler(async (req: Request, res: Response) => {
     const userPayload = req.userPayload;
     if (!userPayload) res.status(400).json({ error: "User payload is missing" });
     else {
@@ -19,9 +20,9 @@ export const createPlantCareController = async (req: Request, res: Response) => 
         const response = await plantCareService.createPlantCareService(userPayload._id, req.body);
         res.status(201).json(response);
     };
-};
+});
 
-export const updatePlantCareController = async (req: Request, res: Response) => {
+export const updatePlantCareController = asyncHandler(async (req: Request, res: Response) => {
     const userPayload = req.userPayload;
     if (!userPayload) res.status(400).json({ error: "User payload is missing" });
     else {
@@ -29,13 +30,13 @@ export const updatePlantCareController = async (req: Request, res: Response) => 
         const response = await plantCareService.updatePlantCareService(userPayload._id, req.params.id, req.body);
         res.status(200).json(response);
     };
-};
+});
 
-export const deletePlantCareController = async (req: Request, res: Response) => {
+export const deletePlantCareController = asyncHandler(async (req: Request, res: Response) => {
     const userPayload = req.userPayload;
     if (!userPayload) res.status(400).json({ error: "User payload is missing" });
     else {
         const response = await plantCareService.deletePlantCareService(userPayload._id, req.params.id);
         res.status(200).json(response);
     };
-};
+});

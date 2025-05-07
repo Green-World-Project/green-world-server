@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import 'dotenv/config'
 import { Types } from "mongoose";
-import { BadRequestError } from '../utils/errorClasses';
+import { BadRequestError } from '../utils/ApiError';
 
 export interface UserPayload {
     _id: Types.ObjectId;
