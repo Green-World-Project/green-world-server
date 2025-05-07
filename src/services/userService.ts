@@ -3,7 +3,7 @@ import UserModel, { User } from '../models/user';
 import { userObject } from '../utils/user';
 import { generateTokenService } from './authService'
 import { Types } from "mongoose";
-import { BadRequestError, ConflictError, UnauthorizedError, ValidationError, InternalServerError, NotFoundError } from '../utils/ApiError';
+import { BadRequestError, ConflictError, UnauthorizedError, ValidationError, InternalServerError } from '../utils/ApiError';
 
 const saltRounds = 10;
 
