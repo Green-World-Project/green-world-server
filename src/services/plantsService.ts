@@ -6,14 +6,15 @@ import { InternalServerError, NotFoundError } from '../utils/ApiError';
 export interface Plant {
     _id: Types.ObjectId,
     plant_name: string,
+    category: string,
     ideal_soil_moisture_percentage: number,
     optimal_temperature_celsius: Double,
     light_exposure_hours: number,
     optimal_soil_ph_level: Double,
     recommended_npk_ratio: string,
     water_duration_days: number,
-    daily_water_requirement_liters_per_m2: number,
-    humidity_percentage: number,
+    daily_water_requirement_liters_per_m2: Double,
+    humidity_percentage: Double,
     plant_description: string
 };
 

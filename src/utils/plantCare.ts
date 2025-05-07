@@ -22,6 +22,7 @@ export const plantCareObject = (userPlant: PlantCare, plants: (Plant | Plant[]))
             ).toLocaleString(),
         isWatered: userPlant.isWatered,
         info: {
+            category: plant.category,
             ideal_soil_moisture_percentage: plant.ideal_soil_moisture_percentage,
             optimal_temperature_celsius: plant.optimal_temperature_celsius,
             light_exposure_hours: plant.light_exposure_hours,
