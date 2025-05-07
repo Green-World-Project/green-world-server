@@ -12,7 +12,7 @@ export const getPlantCareService = async (userID: Types.ObjectId) => {
     if (!checkUser) throw new UnauthorizedError("Unauthorized");
     const result = await plantCareModel.find({ userID: checkUser._id }).sort({ createdAt: -1 });
     const plants = await getPlants() as Plant[];
-    if (result && result.length > 0) return mapPlantCareList(result, plants);
+    if (result) return mapPlantCareList(result, plants);
     else throw new NotFoundError("Plants not found in care system");
 };
 
@@ -82,7 +82,7 @@ const plantCareTimer = async () => {
             );
             const user = await UserModel.findById(plantCare.userID);
             if (user) {
-                const emailContent = generateWaterReminderEmail(plant.plant_name, `${user.firstName} ${user.lastName}`);
+                const emailContent = generateWaterReminderEmail(plant.plant_name, user.firstName);
                 await sendEmail(user.email, emailContent.subject, emailContent.text);
                 console.log(`PlantCare ${plantCare._id} marked as not watered.`);
             };
