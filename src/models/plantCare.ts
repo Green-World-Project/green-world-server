@@ -33,4 +33,4 @@ plantCareSchema.pre('updateOne', function (next) {
     next();
 });
 
-export default mongoose.model(`PlantCare`, plantCareSchema, `plant_care_system`);
+export default mongoose.model(`PlantCare`, plantCareSchema, `plant_care`);
