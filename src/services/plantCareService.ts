@@ -6,6 +6,7 @@ import { Types } from "mongoose";
 import { sendEmail } from '../utils/email';
 import { generateWaterReminderEmail } from '../utils/emailTemplates';
 import { BadRequestError, NotFoundError, UnauthorizedError } from '../utils/ApiError';
+import cron from 'node-cron';
 
 export const getPlantCareService = async (userID: Types.ObjectId) => {
     const checkUser = await UserModel.findById(userID);
@@ -90,6 +91,6 @@ const plantCareTimer = async () => {
     };
 };
 
-setInterval(() => {
-    plantCareTimer();
-}, 60 * 1000);
+cron.schedule('* * * * *', async () => {
+    await plantCareTimer();
+});
