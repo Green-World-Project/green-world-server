@@ -6,7 +6,7 @@ import { Types } from "mongoose";
 import { sendEmail } from '../utils/email';
 import { generateWaterReminderEmail } from '../utils/emailTemplates';
 import { BadRequestError, NotFoundError, UnauthorizedError } from '../utils/ApiError';
-import cron from 'node-cron';
+import { CronJob } from 'cron';
 
 export const getPlantCareService = async (userID: Types.ObjectId) => {
     const checkUser = await UserModel.findById(userID);
@@ -91,6 +91,12 @@ const plantCareTimer = async () => {
     };
 };
 
-cron.schedule('* * * * *', async () => {
-    await plantCareTimer();
-});
+const job = new CronJob(
+    '* * * * *',
+    async function () {
+        await plantCareTimer();
+    },
+    null,  // onComplete (null means no function to run when the job stops)
+    true,  // start the job right away
+    null   // timezone (null means use the server's local timezone)
+);
