@@ -20,7 +20,3 @@ export const connectToDatabase = async () => {
         }
     }
 };
-
-export const getDatabase = () => {
-    return mongoose.connection.db;
-}
