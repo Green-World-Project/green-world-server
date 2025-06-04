@@ -7,6 +7,7 @@ export interface PlantCare {
     groundArea: number,
     isWatered: Boolean,
     lastWateredAt: Date,
+    logs: Array<{ wateringDate: Date }>,
     createdAt?: Date,
     updatedAt?: Date
 };
@@ -18,6 +19,7 @@ const plantCareSchema = new mongoose.Schema({
     groundArea: { type: Number, required: true },
     isWatered: { type: Boolean, default: false },
     lastWateredAt: { type: Date, default: null },
+    logs: [{ wateringDate: { type: Date } }]
 }, { timestamps: true });
 
 plantCareSchema.pre('save', function (next) {
