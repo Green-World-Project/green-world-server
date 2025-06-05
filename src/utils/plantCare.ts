@@ -33,6 +33,9 @@ export const plantCareObject = (userPlant: PlantCare, plants: (Plant | Plant[]))
             humidity_percentage: plant.humidity_percentage,
             plant_description: plant.plant_description,
         },
+        logs: userPlant.logs.map((log) => ({
+            wateringDate: new Date(log.wateringDate).toLocaleString()
+        })),
         updatedAt: userPlant.updatedAt?.toLocaleString(),
     };
 };

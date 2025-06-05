@@ -11,9 +11,19 @@ import { CronJob } from 'cron';
 export const getPlantCareService = async (userID: Types.ObjectId) => {
     const checkUser = await UserModel.findById(userID);
     if (!checkUser) throw new UnauthorizedError("Unauthorized");
-    const result = await plantCareModel.find({ userID: checkUser._id }).sort({ createdAt: -1 });
+
+    const result = await plantCareModel.aggregate([
+        { $match: { userID: checkUser._id } },
+        { $sort: { createdAt: -1 } },
+        {
+            $addFields: {
+                logs: { $reverseArray: { $sortArray: { input: "$logs", sortBy: { wateringDate: 1 } } } }
+            }
+        }
+    ]);
+
     const plants = await getPlants() as Plant[];
-    if (result) return mapPlantCareList(result, plants);
+    if (result) return mapPlantCareList(result as PlantCare[], plants);
     else throw new NotFoundError("Plants not found in care system");
 };
 
@@ -23,17 +33,19 @@ export const createPlantCareService = async (userID: Types.ObjectId, body: Plant
     const plantID = body.plantID;
     const plant = await getPlants(plantID);
     if (!plant || Array.isArray(plant)) throw new NotFoundError("Chose Plant From List");
+
     const result = await plantCareModel.create({
         userID: userID,
         plantID: plantID,
         waterNeed: body.groundArea * plant.daily_water_requirement_liters_per_m2,
         groundArea: body.groundArea,
         isWatered: body.isWatered,
+        logs: body.isWatered ? [{ wateringDate: new Date() }] : []
     });
     if (!result) throw new BadRequestError("Plant not added");
     return {
         message: "Added successfully",
-        result: plantCareObject(result, plant as Plant),
+        result: plantCareObject(result as PlantCare, plant as Plant),
     };
 };
 
@@ -46,16 +58,17 @@ export const updatePlantCareService = async (userID: Types.ObjectId, id: String,
     const waterNeed = body.groundArea
         ? body.groundArea * plant.daily_water_requirement_liters_per_m2
         : body.waterNeed;
-    const result = await plantCareModel.findByIdAndUpdate(id, {
+    const result = await plantCareModel.findOneAndUpdate({ _id: id }, {
         plantID: plantID,
         waterNeed: waterNeed,
         groundArea: body.groundArea,
         isWatered: body.isWatered,
+        ...(body.isWatered) ? { $push: { logs: { wateringDate: new Date() } } } : {},
     }, { new: true });
     if (!result) throw new BadRequestError("Plant not updated");
     return {
         message: "Updated successfully",
-        result: plantCareObject(result, plant as Plant),
+        result: plantCareObject(result as PlantCare, plant as Plant),
     };
 };
 
