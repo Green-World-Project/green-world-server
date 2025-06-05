@@ -58,7 +58,7 @@ export const updatePlantCareService = async (userID: Types.ObjectId, id: String,
     const waterNeed = body.groundArea
         ? body.groundArea * plant.daily_water_requirement_liters_per_m2
         : body.waterNeed;
-    const result = await plantCareModel.findByIdAndUpdate(id, {
+    const result = await plantCareModel.findOneAndUpdate({ _id: id }, {
         plantID: plantID,
         waterNeed: waterNeed,
         groundArea: body.groundArea,

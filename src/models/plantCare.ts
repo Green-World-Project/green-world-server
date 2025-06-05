@@ -28,7 +28,7 @@ plantCareSchema.pre('save', function (next) {
     next();
 });
 
-plantCareSchema.pre('updateOne', function (next) {
+plantCareSchema.pre('findOneAndUpdate', function (next) {
     const update = this.getUpdate();
     if (update && (update as mongoose.UpdateQuery<PlantCare>).isWatered === true)
         (update as mongoose.UpdateQuery<PlantCare>).lastWateredAt = new Date();
