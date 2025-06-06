@@ -24,7 +24,7 @@ export const getPlantCareService = async (userID: Types.ObjectId) => {
 
     const plants = await getPlants() as Plant[];
     if (result) return mapPlantCareList(result as PlantCare[], plants);
-    else throw new NotFoundError("Plants not found in care system");
+    else return "Plant Care is empty";
 };
 
 export const createPlantCareService = async (userID: Types.ObjectId, body: PlantCare) => {

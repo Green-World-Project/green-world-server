@@ -25,6 +25,7 @@ export const getHistoryService = async (userID: Types.ObjectId) => {
     if (!checkUser) throw new UnauthorizedError("Unauthorized");
     const result = await historyModel.find({ userID: checkUser._id }).sort({ createdAt: -1 });
     if (result) return mapHistoryList(result as History[]);
+    else return "History is empty";
 };
 
 export const addHistoryService = async (userID: Types.ObjectId, file: multerFile, info: info) => {
