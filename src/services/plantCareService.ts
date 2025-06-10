@@ -83,13 +83,14 @@ export const deletePlantCareService = async (userID: Types.ObjectId, id: String)
 const plantCareTimer = async () => {
     const plantCareList = await plantCareModel.find();
     const plants = await getPlants();
+    const now = Date.now();
     if (!plants || !Array.isArray(plants)) throw new NotFoundError("Plants not found");
     for (const plantCare of plantCareList) {
         const plant = (plants as Plant[]).find((plant: Plant) => plant._id.toString() === plantCare.plantID.toString());
         if (!plant) continue;
         const lastWateredAt = plantCare.lastWateredAt ? new Date(plantCare.lastWateredAt).getTime() : 0;
         const nextWateringDate = lastWateredAt + (plant.water_duration_days || 0) * 24 * 60 * 60 * 1000;
-        if (lastWateredAt >= nextWateringDate && plantCare.isWatered) {
+        if (now >= nextWateringDate && plantCare.isWatered) {
             await plantCareModel.updateOne(
                 { _id: plantCare._id },
                 { $set: { isWatered: false } }
