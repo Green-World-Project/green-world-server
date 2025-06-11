@@ -1,9 +1,11 @@
-import UserModel, { User } from '../models/user';
+import UserModel from '../models/user';
 import { addHistoryService, multerFile } from '../services/historyService';
 import axios from 'axios';
 import FormData from 'form-data';
 import { Types } from "mongoose";
 import { UnauthorizedError, ValidationError } from '../utils/ApiError';
+
+const baseURL = "http://localhost:8080";
 
 export const plantIdentService = async (userID: Types.ObjectId, file: multerFile) => {
     const checkUser = await UserModel.findById(userID);
@@ -11,7 +13,7 @@ export const plantIdentService = async (userID: Types.ObjectId, file: multerFile
     try {
         const formData = new FormData();
         formData.append('file', file.buffer, file.originalname);
-        const response = await axios.post(`${process.env.PLANT_IDENTIFICATION_SESSION}/predict`, formData, {
+        const response = await axios.post(`${baseURL}/predict`, formData, {
             headers: { ...formData.getHeaders() }
         });
         addHistoryService(checkUser._id, file, response.data);
