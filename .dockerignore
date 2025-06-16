@@ -1,0 +1,18 @@
+# Dependency directories
+node_modules/
+
+# Documentations
+docs/
+
+# TypeScript output
+dist/
+
+# dotenv environment variable files
+# .env
+
+# Configurations
+tsconfig.json
+
+README.md
+
+mindMap.txt
